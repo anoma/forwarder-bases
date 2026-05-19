@@ -1,0 +1,16 @@
+[workspace]
+resolver = "3"
+members = ["bindings"]
+
+[workspace.package]
+keywords = ["anoma", "evm", "protocol-adapter", "forwarder"]
+authors = ["Anoma Foundation"]
+license = "MIT"
+repository = "https://github.com/anoma/forwarder-bases"
+homepage = "https://anoma.net/"
+edition = "2024"
+
+[workspace.dependencies]
+alloy = { version = "1.8.3" }
+serde = { version = "1.0.228", default-features = false }
+
