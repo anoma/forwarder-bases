@@ -59,4 +59,21 @@ contract NativeTokenReceiverTest is Test, NativeTokenReceiver {
         assertTrue(success);
         assertEq(balanceAfter - balanceBefore, amount);
     }
+
+    function test_receive_reverts_on_low_level_call_with_non_empty_calldata() public {
+        uint256 amount = 1 ether;
+        vm.deal(msg.sender, amount);
+
+        uint256 receiverBalanceBefore = address(this).balance;
+        uint256 senderBalanceBefore = msg.sender.balance;
+
+        vm.prank(msg.sender);
+        // solhint-disable-next-line avoid-low-level-calls
+        (bool success, bytes memory result) = payable(address(this)).call{value: amount}(hex"deadbeef");
+
+        assertFalse(success, "non-empty calldata call unexpectedly succeeded");
+        assertEq(result, "", "unexpected revert return data");
+        assertEq(address(this).balance, receiverBalanceBefore, "receiver balance changed despite failed call");
+        assertEq(msg.sender.balance, senderBalanceBefore, "sender balance changed despite failed call");
+    }
 }
