@@ -29,6 +29,8 @@ contract TransientFallbackHandlerTest is Test {
         bytes4 selector,
         bytes4 magicNumber
     ) public {
+        vm.assume(selector != IFallbackHandler.registerSelector.selector);
+        vm.assume(selector != IFallbackHandler.lookupMagicNumber.selector);
         vm.assume(magicNumber != _UNREGISTERED);
 
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
@@ -40,6 +42,8 @@ contract TransientFallbackHandlerTest is Test {
         bytes4 selector,
         bytes4 magicNumber
     ) public {
+        vm.assume(selector != IFallbackHandler.registerSelector.selector);
+        vm.assume(selector != IFallbackHandler.lookupMagicNumber.selector);
         vm.assume(magicNumber != _UNREGISTERED);
 
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
@@ -54,6 +58,8 @@ contract TransientFallbackHandlerTest is Test {
         bytes4 magicNumber,
         bytes4 differentMagicNumber
     ) public {
+        vm.assume(selector != IFallbackHandler.registerSelector.selector);
+        vm.assume(selector != IFallbackHandler.lookupMagicNumber.selector);
         vm.assume(magicNumber != _UNREGISTERED);
         vm.assume(differentMagicNumber != _UNREGISTERED);
 
@@ -78,6 +84,8 @@ contract TransientFallbackHandlerTest is Test {
     }
 
     function test_handleFallback_emits_FallbackHandled_event(bytes4 selector, bytes4 magicNumber) public {
+        vm.assume(selector != IFallbackHandler.registerSelector.selector);
+        vm.assume(selector != IFallbackHandler.lookupMagicNumber.selector);
         vm.assume(magicNumber != _UNREGISTERED);
 
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
@@ -109,6 +117,8 @@ contract TransientFallbackHandlerTest is Test {
     function testFuzz_handleFallback_returns_the_magic_number_as_raw_return_data(bytes4 selector, bytes4 magicNumber)
         public
     {
+        vm.assume(selector != IFallbackHandler.registerSelector.selector);
+        vm.assume(selector != IFallbackHandler.lookupMagicNumber.selector);
         vm.assume(magicNumber != _UNREGISTERED);
 
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
@@ -136,11 +146,15 @@ contract TransientFallbackHandlerTest is Test {
 
     function testFuzz_registerSelector_distinct_selectors_do_not_collide(
         bytes4 selectorA,
-        bytes4 magicNumberA,
         bytes4 selectorB,
+        bytes4 magicNumberA,
         bytes4 magicNumberB
     ) public {
         vm.assume(selectorA != selectorB);
+        vm.assume(selectorA != IFallbackHandler.registerSelector.selector);
+        vm.assume(selectorA != IFallbackHandler.lookupMagicNumber.selector);
+        vm.assume(selectorB != IFallbackHandler.registerSelector.selector);
+        vm.assume(selectorB != IFallbackHandler.lookupMagicNumber.selector);
         vm.assume(magicNumberA != bytes4(0));
         vm.assume(magicNumberB != bytes4(0));
 
