@@ -18,7 +18,7 @@ contract TransientFallbackHandlerTest is Test {
         _erc721 = new ERC721Example();
     }
 
-    function test_registerCallback_registers_a_selector_and_the_associated_magic_number() public {
+    function test_registerSelector_registers_a_selector_and_the_associated_magic_number() public {
         bytes4 selector = 0xdead1234;
         bytes4 magicNumber = 0xbeef5678;
 
@@ -27,7 +27,7 @@ contract TransientFallbackHandlerTest is Test {
         assertEq(_handler.lookupMagicNumber(selector), magicNumber, "An unexpected magic number got returned");
     }
 
-    function test_registerCallback_reregisters_a_selector_with_the_same_magic_number() public {
+    function test_registerSelector_reregisters_a_selector_with_the_same_magic_number() public {
         bytes4 selector = 0xdead1234;
         bytes4 magicNumber = 0xbeef5678;
 
@@ -38,7 +38,7 @@ contract TransientFallbackHandlerTest is Test {
         assertEq(_handler.lookupMagicNumber(selector), magicNumber, "An unexpected magic number got returned");
     }
 
-    function test_registerCallback_reregisters_a_selector_with_a_different_magic_number() public {
+    function test_registerSelector_reregisters_a_selector_with_a_different_magic_number() public {
         bytes4 selector = 0xdead1234;
         bytes4 magicNumber = 0xbeef5678;
 
