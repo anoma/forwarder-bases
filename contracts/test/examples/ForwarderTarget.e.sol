@@ -3,8 +3,12 @@ pragma solidity ^0.8.30;
 
 uint256 constant INPUT_VALUE = 123;
 uint256 constant OUTPUT_VALUE = INPUT_VALUE + 1;
-bytes constant INPUT = abi.encodeCall(ForwarderTargetExample.increment, INPUT_VALUE);
+bytes constant TARGET_PAYLOAD = abi.encodeCall(ForwarderTargetExample.increment, INPUT_VALUE);
 bytes constant EXPECTED_OUTPUT = abi.encode(OUTPUT_VALUE);
+
+function _encodedDefaultInput(address target) pure returns (bytes memory input) {
+    input = abi.encode(target, TARGET_PAYLOAD);
+}
 
 contract ForwarderTargetExample {
     event CallReceived(uint256 input, uint256 output);
