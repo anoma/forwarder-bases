@@ -29,8 +29,8 @@ contract TransientFallbackHandler is IFallbackHandler {
     bytes32 internal constant _SELECTORS_TO_MAGIC_NUMBERS_SLOT =
         0xaf9e352fdadaaf3b4a499b250a8d882d62ebdf001bf445271cf2d2b998b11b00;
 
-    /// @notice The magic number referring to unregistered callbacks.
-    bytes4 internal constant _UNREGISTERED_CALLBACK = bytes4(0);
+    /// @notice The magic number referring to unregistered fallbacks.
+    bytes4 internal constant _UNREGISTERED = bytes4(0);
 
     /// @notice Thrown if the selector of a calling function is not registered.
     /// @param selector The selector of the calling function.
@@ -65,9 +65,7 @@ contract TransientFallbackHandler is IFallbackHandler {
     function _handleFallback(bytes4 selector, bytes memory data) internal returns (bytes4 magicNumber) {
         magicNumber = bytes4(_SELECTORS_TO_MAGIC_NUMBERS_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload());
 
-        require(
-            magicNumber != _UNREGISTERED_CALLBACK, UnregisteredSelector({selector: selector, magicNumber: magicNumber})
-        );
+        require(magicNumber != _UNREGISTERED, UnregisteredSelector({selector: selector, magicNumber: magicNumber}));
 
         emit FallbackHandled({sender: msg.sender, selector: selector, data: data});
     }
