@@ -2,7 +2,7 @@
 pragma solidity ^0.8.30;
 
 import {IERC721Receiver} from "@openzeppelin-contracts-5.6.1/token/ERC721/IERC721Receiver.sol";
-import {Test} from "forge-std-1.15.0/src/Test.sol";
+import {Test} from "forge-std-1.16.1/src/Test.sol";
 
 import {TransientFallbackHandler} from "../src/TransientFallbackHandler.sol";
 import {ERC721Example} from "./examples/ERC721.e.sol";
