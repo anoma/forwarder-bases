@@ -22,9 +22,7 @@ contract TransientFallbackHandler is IFallbackHandler {
     using TransientSlot for bytes32;
     using TransientSlot for TransientSlot.Bytes32Slot;
 
-    /// @notice The ERC-7201 (see https://eips.ethereum.org/EIPS/eip-7201) storage location of the transient mapping
-    /// between callback selectors and magic numbers.
-    /// @dev Obtained from
+    /// @notice The ERC-7201 storage location of the transient mapping between callback selectors and magic numbers.
     /// @custom:storage-location erc7201:anoma.transient.selectorsToMagicNumbers
     bytes32 public constant ERC7201_SELECTORS_TO_MAGIC_NUMBERS_SLOT =
         0xaf9e352fdadaaf3b4a499b250a8d882d62ebdf001bf445271cf2d2b998b11b00;
