@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
+import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/ReentrancyGuardTransient.sol";
+
 import {EmergencyMigratableForwarderBase} from "../src/EmergencyMigratableForwarderBase.sol";
 import {ForwarderBase} from "../src/ForwarderBase.sol";
 
@@ -10,11 +12,12 @@ import {
     ForwarderTargetExample,
     INPUT_VALUE,
     OUTPUT_VALUE,
-    INPUT,
-    EXPECTED_OUTPUT
+    EXPECTED_OUTPUT,
+    _encodedDefaultInput
 } from "./examples/ForwarderTarget.e.sol";
 
 import {ProtocolAdapterMock} from "./examples/ProtocolAdapter.m.sol";
+import {ReentrantTargetExample} from "./examples/ReentrantTarget.e.sol";
 
 import {ForwarderBaseTest} from "./ForwarderBase.t.sol";
 
@@ -26,13 +29,13 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
     function setUp() public override {
         _pa = address(new ProtocolAdapterMock(_EMERGENCY_COMMITTEE));
 
+        _tgt = new ForwarderTargetExample();
+
         _emrgFwd = new EmergencyMigratableForwarderExample({
             protocolAdapter: _pa, emergencyCommittee: _EMERGENCY_COMMITTEE, logicRef: _LOGIC_REF
         });
 
         _fwd = ForwarderExample(address(_emrgFwd));
-
-        _tgt = ForwarderTargetExample(_fwd.TARGET());
     }
 
     function test_constructor_reverts_if_the_emergency_committe_address_is_zero() public {
@@ -91,7 +94,7 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
         _stopProtocolAdapter();
 
         vm.expectRevert(EmergencyMigratableForwarderBase.EmergencyCallerNotSet.selector);
-        _emrgFwd.forwardEmergencyCall({input: INPUT});
+        _emrgFwd.forwardEmergencyCall({input: _encodedDefaultInput(address(_tgt))});
     }
 
     function test_forwardEmergencyCall_reverts_if_the_pa_is_stopped_but_the_caller_is_not_the_emergency_caller()
@@ -104,7 +107,20 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
         vm.expectRevert(
             abi.encodeWithSelector(ForwarderBase.UnauthorizedCaller.selector, _EMERGENCY_CALLER, _UNAUTHORIZED_CALLER)
         );
-        _emrgFwd.forwardEmergencyCall({input: INPUT});
+        _emrgFwd.forwardEmergencyCall({input: _encodedDefaultInput(address(_tgt))});
+    }
+
+    function test_forwardEmergencyCall_reverts_when_the_target_reenters() public {
+        _stopProtocolAdapter();
+        _setEmergencyCaller();
+
+        ReentrantTargetExample reentrant = new ReentrantTargetExample();
+        bytes memory reentrantInput =
+            abi.encode(address(reentrant), abi.encodeCall(ReentrantTargetExample.reenterForwardEmergencyCall, ()));
+
+        vm.prank(_EMERGENCY_CALLER);
+        vm.expectRevert(ReentrancyGuardTransient.ReentrancyGuardReentrantCall.selector, address(_emrgFwd));
+        _emrgFwd.forwardEmergencyCall({input: reentrantInput});
     }
 
     function test_forwardEmergencyCall_forwards_calls_if_the_pa_is_stopped_and_the_caller_is_the_emergency_caller()
@@ -114,7 +130,7 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
         _setEmergencyCaller();
 
         vm.prank(_EMERGENCY_CALLER);
-        bytes memory output = _emrgFwd.forwardEmergencyCall({input: INPUT});
+        bytes memory output = _emrgFwd.forwardEmergencyCall({input: _encodedDefaultInput(address(_tgt))});
         assertEq(keccak256(output), keccak256(EXPECTED_OUTPUT));
     }
 
@@ -122,10 +138,12 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
         _stopProtocolAdapter();
         _setEmergencyCaller();
 
+        bytes memory input = _encodedDefaultInput(address(_tgt));
+
         vm.prank(_EMERGENCY_CALLER);
         vm.expectEmit(address(_emrgFwd));
-        emit ForwarderExample.EmergencyCallForwarded(INPUT, EXPECTED_OUTPUT);
-        _emrgFwd.forwardEmergencyCall({input: INPUT});
+        emit EmergencyMigratableForwarderExample.EmergencyCallForwarded(input, EXPECTED_OUTPUT);
+        _emrgFwd.forwardEmergencyCall({input: input});
     }
 
     function test_forwardEmergencyCall_calls_the_function_in_the_target_contract() public {
@@ -135,7 +153,7 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
 
         vm.expectEmit(address(_tgt));
         emit ForwarderTargetExample.CallReceived(INPUT_VALUE, OUTPUT_VALUE);
-        _emrgFwd.forwardEmergencyCall({input: INPUT});
+        _emrgFwd.forwardEmergencyCall({input: _encodedDefaultInput(address(_tgt))});
     }
 
     function test_emergencyCaller_returns_the_emergency_caller_after_it_has_been_set() public {
