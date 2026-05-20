@@ -26,7 +26,7 @@ contract TransientFallbackHandler is IFallbackHandler {
     /// between callback selectors and magic numbers.
     /// @dev Obtained from
     /// @custom:storage-location erc7201:anoma.transient.selectorsToMagicNumbers
-    bytes32 internal constant _SELECTORS_TO_MAGIC_NUMBERS_SLOT =
+    bytes32 public constant ERC7201_SELECTORS_TO_MAGIC_NUMBERS_SLOT =
         0xaf9e352fdadaaf3b4a499b250a8d882d62ebdf001bf445271cf2d2b998b11b00;
 
     /// @notice The magic number referring to unregistered fallbacks.
@@ -48,12 +48,14 @@ contract TransientFallbackHandler is IFallbackHandler {
 
     /// @inheritdoc IFallbackHandler
     function registerSelector(bytes4 selector, bytes4 magicNumber) external override {
-        _SELECTORS_TO_MAGIC_NUMBERS_SLOT.deriveMapping(bytes32(selector)).asBytes32().tstore(bytes32(magicNumber));
+        ERC7201_SELECTORS_TO_MAGIC_NUMBERS_SLOT.deriveMapping(bytes32(selector)).asBytes32()
+            .tstore(bytes32(magicNumber));
     }
 
     /// @inheritdoc IFallbackHandler
     function lookupMagicNumber(bytes4 selector) external view override returns (bytes4 magicNumber) {
-        magicNumber = bytes4(_SELECTORS_TO_MAGIC_NUMBERS_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload());
+        magicNumber =
+            bytes4(ERC7201_SELECTORS_TO_MAGIC_NUMBERS_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload());
     }
 
     /// @notice Handles callbacks to adaptively support ERC standards.
@@ -63,7 +65,8 @@ contract TransientFallbackHandler is IFallbackHandler {
     /// @param data The calldata.
     /// @return magicNumber The magic number registered for the function selector triggering the fallback.
     function _handleFallback(bytes4 selector, bytes memory data) internal returns (bytes4 magicNumber) {
-        magicNumber = bytes4(_SELECTORS_TO_MAGIC_NUMBERS_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload());
+        magicNumber =
+            bytes4(ERC7201_SELECTORS_TO_MAGIC_NUMBERS_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload());
 
         require(magicNumber != _UNREGISTERED, UnregisteredSelector({selector: selector, magicNumber: magicNumber}));
 

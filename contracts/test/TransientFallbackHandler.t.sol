@@ -11,9 +11,9 @@ import {ERC1155Example} from "./examples/ERC1155.e.sol";
 import {ERC721Example} from "./examples/ERC721.e.sol";
 
 contract TransientFallbackHandlerTest is Test {
-    TransientFallbackHandler internal _handler;
-
     bytes4 internal constant _UNREGISTERED = bytes4(0);
+
+    TransientFallbackHandler internal _handler;
 
     ERC721Example internal _erc721;
     ERC1155Example internal _erc1155;
@@ -82,11 +82,12 @@ contract TransientFallbackHandlerTest is Test {
 
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
 
-        bytes memory data = abi.encodeWithSelector(selector, uint256(42), bytes32("payload"));
+        bytes memory data = abi.encodeWithSelector(selector, uint256(42), keccak256("payload"));
 
         vm.expectEmit(address(_handler));
         emit IFallbackHandler.FallbackHandled({sender: address(this), selector: selector, data: data});
 
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success,) = address(_handler).call(data);
         assertTrue(success, "fallback call failed");
     }
@@ -112,6 +113,7 @@ contract TransientFallbackHandlerTest is Test {
 
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
 
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = address(_handler).call(abi.encodeWithSelector(selector));
         assertTrue(success, "fallback call failed");
         assertEq(abi.decode(returnData, (bytes4)), magicNumber, "fallback returned an unexpected magic number");
