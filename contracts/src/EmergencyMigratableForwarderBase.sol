@@ -7,8 +7,7 @@ import {IEmergencyMigratable} from "./interfaces/IEmergencyMigratable.sol";
 
 /// @title EmergencyMigratableForwarderBase
 /// @author Anoma Foundation, 2026
-/// @notice A forwarder contract forwarding calls and holding funds to wrap and unwrap ERC-20 tokens as resources that
-/// supports emergency migration to a future protocol adapter version.
+/// @notice A forwarder base contract supporting emergency migration to a future protocol adapter version.
 /// @custom:security-contact security@anoma.foundation
 abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, ForwarderBase {
     /// @notice The emergency committee address allowed to set an emergency caller in case either the protocol adapter

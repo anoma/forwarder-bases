@@ -9,7 +9,7 @@ import {IProtocolAdapterSpecific} from "./interfaces/IProtocolAdapterSpecific.so
 
 /// @title ForwarderBase
 /// @author Anoma Foundation, 2026
-/// @notice A base contract for a protocol-adapter- and logic-reference-specific forwarder contract.
+/// @notice A base contract for protocol-adapter- and logic-reference-specific forwarders.
 /// @custom:security-contact security@anoma.foundation
 abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicRefSpecific, ReentrancyGuardTransient {
     /// @notice The protocol adapter contract that can forward calls.

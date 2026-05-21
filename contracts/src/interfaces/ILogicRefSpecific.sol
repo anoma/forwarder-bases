@@ -3,7 +3,7 @@ pragma solidity ^0.8.30;
 
 /// @title ILogicRefSpecific
 /// @author Anoma Foundation, 2026
-/// @notice The interface of a contract being associated with a specific resource logic function reference.
+/// @notice The interface contracts being associated with a specific resource logic function reference.
 interface ILogicRefSpecific {
     /// @notice Returns the resource logic function reference this contract is associated with.
     /// @return logicRef The resource logic function reference.
