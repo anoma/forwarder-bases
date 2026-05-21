@@ -3,9 +3,9 @@ pragma solidity ^0.8.30;
 
 import {IVersion} from "./interfaces/IVersion.sol";
 
-/// @title ForwarderBase
+/// @title Version
 /// @author Anoma Foundation, 2026
-/// @notice A base contract for a protocol-adapter- and logic-reference-specific forwarder contract.
+/// @notice A base contract to inherit from when versioning contracts.
 /// @custom:security-contact security@anoma.foundation
 contract Version is IVersion {
     /// @notice The version number of the contract.

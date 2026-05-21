@@ -3,7 +3,7 @@ pragma solidity ^0.8.30;
 
 /// @title INativeTokenReceiver
 /// @author Anoma Foundation, 2026
-/// @notice The interface of a contract receiving native tokens.
+/// @notice The interface of contracts receiving native tokens.
 interface INativeTokenReceiver {
     /// @notice Emitted when a native tokens have been received
     /// @dev This event is intended to be emitted in the `receive` function and is therefore bound by the gas

@@ -3,7 +3,7 @@ pragma solidity ^0.8.30;
 
 /// @title IEmergencyMigratable
 /// @author Anoma Foundation, 2026
-/// @notice The interface of the emergency migratable forwarder contract.
+/// @notice The interface of emergency migratable forwarder contracts.
 interface IEmergencyMigratable {
     /// @notice Forwards an external call to read or write EVM state. This function can only be called by the address
     /// set by emergency committee if the RISC Zero emergency stop is active.
