@@ -11,6 +11,6 @@ homepage = "https://anoma.net/"
 edition = "2024"
 
 [workspace.dependencies]
-alloy = { version = "1.8.3" }
+alloy = { version = "2.0.5" }
 serde = { version = "1.0.228", default-features = false }
 
