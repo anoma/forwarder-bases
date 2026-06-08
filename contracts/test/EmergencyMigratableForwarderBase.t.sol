@@ -6,18 +6,18 @@ import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/Reen
 import {EmergencyMigratableForwarderBase} from "../src/EmergencyMigratableForwarderBase.sol";
 import {ForwarderBase} from "../src/ForwarderBase.sol";
 
-import {EmergencyMigratableForwarderExample} from "./examples/EmergencyMigratableForwarder.e.sol";
-import {ForwarderExample} from "./examples/Forwarder.e.sol";
+import {EmergencyMigratableForwarderExample} from "./examples/EmergencyMigratableForwarderExample.sol";
+import {ForwarderExample} from "./examples/ForwarderExample.sol";
 import {
     ForwarderTargetExample,
     INPUT_VALUE,
     OUTPUT_VALUE,
     EXPECTED_OUTPUT,
     _encodedDefaultInput
-} from "./examples/ForwarderTarget.e.sol";
+} from "./examples/ForwarderTargetExample.sol";
 
 import {ProtocolAdapterMock} from "./examples/ProtocolAdapter.m.sol";
-import {ReentrantTargetExample} from "./examples/ReentrantTarget.e.sol";
+import {ReentrantTargetExample} from "./examples/ReentrantTargetExample.sol";
 
 import {ForwarderBaseTest} from "./ForwarderBase.t.sol";
 
