@@ -5,6 +5,7 @@ auto_detect_solc = false
 evm_version = "osaka"
 gas_reports = [
     "ForwarderBase",
+    "ForwarderBaseUpgradeable",
     "EmergencyMigratableForwarderBase", 
     "NativeTokenReceiver", 
     "TransientFallbackHandler", 
@@ -18,6 +19,10 @@ allow_internal_expect_revert = true
 cbor_metadata = false
 bytecode_hash = "none"
 
+ffi = true
+ast = true
+build_info = true
+extra_output = ["storageLayout"]
 
 src = "src"
 test = "test"
@@ -28,17 +33,24 @@ libs = ["dependencies"]
 auto_detect_remappings = false
 remappings = [
     "@openzeppelin-contracts-5.6.1/=dependencies/@openzeppelin-contracts-5.6.1/",
+    "@openzeppelin-contracts-upgradeable-5.6.1/=dependencies/@openzeppelin-contracts-upgradeable-5.6.1/",
+    "@openzeppelin/contracts/=dependencies/@openzeppelin-contracts-5.6.1/",
     "forge-std-1.16.1/=dependencies/forge-std-1.16.1/",
+    "forge-std/=dependencies/forge-std-1.16.1/src/",
+    "openzeppelin-foundry-upgrades-0.4.1/=dependencies/openzeppelin-foundry-upgrades-0.4.1/",
     "solady-0.1.26/=dependencies/solady-0.1.26/",
 ]
 ignored_warnings_from = [
-    "dependencies/solady-0.1.26/src", # Warning 2424: Natspec memory-safe-assembly special comment for inline assembly is deprecated
+    "dependencies/openzeppelin-foundry-upgrades-0.4.1/src", # Warning 2018: Function state mutability can be restricted to pure
+    "dependencies/solady-0.1.26/src",                       # Warning 2424: Natspec memory-safe-assembly special comment for inline assembly is deprecated
 ]
 
 [dependencies]
 "@openzeppelin-contracts" = "5.6.1"
+"@openzeppelin-contracts-upgradeable" = "5.6.1"
 "forge-std" = "1.16.1"
 "solady" = "0.1.26"
+"openzeppelin-foundry-upgrades" = "0.4.1"
 
 [soldeer]
 recursive_deps = true
