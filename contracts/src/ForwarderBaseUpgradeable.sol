@@ -96,7 +96,8 @@ abstract contract ForwarderBaseUpgradeable is
         internal
         onlyInitializing
     {
-        require(protocolAdapter != address(0) && logicRef != bytes32(0), ZeroNotAllowed());
+        require(protocolAdapter != address(0), ZeroNotAllowed());
+        require(logicRef != bytes32(0), ZeroNotAllowed());
 
         ForwarderBaseStorage storage $ = _getForwarderBaseStorage();
 
