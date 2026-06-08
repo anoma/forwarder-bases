@@ -169,6 +169,11 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
         assertEq(_emrgFwd.getEmergencyCaller(), address(0));
     }
 
+    function _stopProtocolAdapter() internal {
+        vm.prank(_PA_OWNER);
+        ProtocolAdapterMock(_pa).emergencyStop();
+    }
+
     function _setEmergencyCaller() private {
         vm.prank(_EMERGENCY_COMMITTEE);
         _emrgFwd.setEmergencyCaller(_EMERGENCY_CALLER);
