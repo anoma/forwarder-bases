@@ -111,9 +111,4 @@ contract ForwarderBaseTest is Test {
     function test_getLogicRef_returns_the_logic_ref() public view {
         assertEq(_fwd.getLogicRef(), _LOGIC_REF);
     }
-
-    function _stopProtocolAdapter() internal {
-        vm.prank(_PA_OWNER);
-        ProtocolAdapterMock(_pa).emergencyStop();
-    }
 }

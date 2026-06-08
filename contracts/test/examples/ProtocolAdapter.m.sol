@@ -11,6 +11,10 @@ contract ProtocolAdapterMock is Ownable, Pausable {
         _pause();
     }
 
+    function resume() external onlyOwner whenPaused {
+        _unpause();
+    }
+
     function isEmergencyStopped() public view returns (bool isStopped) {
         isStopped = paused();
     }
