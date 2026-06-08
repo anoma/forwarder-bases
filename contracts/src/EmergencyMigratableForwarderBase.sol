@@ -44,15 +44,15 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
     }
 
     /// @inheritdoc IEmergencyMigratable
-    function setEmergencyCaller(address newEmergencyCaller) external {
+    function setEmergencyCaller(address emergencyCaller) external {
         require(_emergencyCaller == address(0), EmergencyCallerAlreadySet(_emergencyCaller));
-        require(newEmergencyCaller != address(0), ZeroNotAllowed());
+        require(emergencyCaller != address(0), ZeroNotAllowed());
         require(
             msg.sender == _EMERGENCY_COMMITTEE, UnauthorizedCaller({expected: _EMERGENCY_COMMITTEE, actual: msg.sender})
         );
         require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
 
-        _emergencyCaller = newEmergencyCaller;
+        _emergencyCaller = emergencyCaller;
     }
 
     /// @inheritdoc IEmergencyMigratable

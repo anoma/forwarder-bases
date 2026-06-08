@@ -13,8 +13,8 @@ interface IEmergencyMigratable {
 
     /// @notice Sets the emergency caller. This function can only be called once by the specified emegrency committee
     /// in the case the appropriate protocol adapter of RiscZero verifier has been stopped.
-    /// @param newEmergencyCaller The emergency caller to set.
-    function setEmergencyCaller(address newEmergencyCaller) external;
+    /// @param emergencyCaller The emergency caller to set.
+    function setEmergencyCaller(address emergencyCaller) external;
 
     /// @notice Returns the emergency caller.
     /// @return caller The emergency caller.
