@@ -32,11 +32,9 @@ abstract contract ForwarderBaseUpgradeable is
         bytes32 _logicRef;
     }
 
-    /// @notice The ERC-7201 storage location of the forwarder base contract
-    /// (see https://eips.ethereum.org/EIPS/eip-7201).
-    /// @dev Obtained from
-    // keccak256(abi.encode(uint256(keccak256("anoma.storage.ForwarderBase")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 internal constant _FORWARDER_BASE_STORAGE_LOCATION =
+    /// @notice The ERC-7201 storage location of the transient mapping between callback selectors and magic numbers.
+    /// @custom:storage-location erc7201:anoma.storage.ForwarderBase
+    bytes32 public constant FORWARDER_BASE_STORAGE_LOCATION =
         0x2bd7b6d3e7cc22d7ab1bb9e579816e4511f108e9e5b105013ce0651501830c00;
 
     error ZeroNotAllowed();
@@ -129,7 +127,7 @@ abstract contract ForwarderBaseUpgradeable is
         /* solhint-disable no-inline-assembly */
         // slither-disable-next-line assembly
         assembly {
-            store.slot := _FORWARDER_BASE_STORAGE_LOCATION
+            store.slot := FORWARDER_BASE_STORAGE_LOCATION
         }
 
         /* solhint-enable no-inline-assembly */
