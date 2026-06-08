@@ -37,23 +37,20 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
     /// @inheritdoc IEmergencyMigratable
     function forwardEmergencyCall(bytes calldata input) external nonReentrant returns (bytes memory output) {
         require(_emergencyCaller != address(0), EmergencyCallerNotSet());
-
-        _checkCaller(_emergencyCaller);
-
-        _checkEmergencyStopped();
+        require(msg.sender == _emergencyCaller, UnauthorizedCaller({expected: _emergencyCaller, actual: msg.sender}));
+        require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
 
         output = _forwardEmergencyCall(input);
     }
 
     /// @inheritdoc IEmergencyMigratable
     function setEmergencyCaller(address newEmergencyCaller) external {
-        _checkCaller(_EMERGENCY_COMMITTEE);
-
-        require(newEmergencyCaller != address(0), ZeroNotAllowed());
-
         require(_emergencyCaller == address(0), EmergencyCallerAlreadySet(_emergencyCaller));
-
-        _checkEmergencyStopped();
+        require(newEmergencyCaller != address(0), ZeroNotAllowed());
+        require(
+            msg.sender == _EMERGENCY_COMMITTEE, UnauthorizedCaller({expected: _EMERGENCY_COMMITTEE, actual: msg.sender})
+        );
+        require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
 
         _emergencyCaller = newEmergencyCaller;
     }
@@ -71,9 +68,4 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
     function _forwardEmergencyCall(bytes calldata input) internal virtual returns (bytes memory output);
 
     // slither-disable-end unimplemented-functions
-
-    /// @notice Checks that the protocol adapter has been emergency stopped.
-    function _checkEmergencyStopped() internal view {
-        require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
-    }
 }

@@ -35,8 +35,7 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
 
     /// @inheritdoc IForwarder
     function forwardCall(bytes32 logicRef, bytes calldata input) external nonReentrant returns (bytes memory output) {
-        _checkCaller(_PROTOCOL_ADAPTER);
-
+        require(msg.sender == _PROTOCOL_ADAPTER, UnauthorizedCaller({expected: _PROTOCOL_ADAPTER, actual: msg.sender}));
         require(_LOGIC_REF == logicRef, UnauthorizedLogicRef({expected: _LOGIC_REF, actual: logicRef}));
 
         output = _forwardCall(input);
@@ -60,10 +59,4 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
     function _forwardCall(bytes calldata input) internal virtual returns (bytes memory output);
 
     // slither-disable-end unimplemented-functions
-
-    /// @notice Checks that an expected caller is calling the function and reverts otherwise.
-    /// @param expected The expected caller.
-    function _checkCaller(address expected) internal view {
-        require(msg.sender == expected, UnauthorizedCaller({expected: expected, actual: msg.sender}));
-    }
 }
