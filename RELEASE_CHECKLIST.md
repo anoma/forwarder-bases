@@ -21,11 +21,7 @@ We distinguish between three release cases:
 
 - [ ] Visit https://www.soliditylang.org/ and check that Solidity compiler version used in `contracts/foundry.toml` has no [known vulnerabilities](https://docs.soliditylang.org/en/latest/bugs.html).
 
-- [ ] Install the dependencies with
-
-  ```sh
-  just contracts-deps
-  ```
+- [ ] Install the dependencies with `just contracts-deps`
 
 - [ ] Check that the dependencies are up-to-date and have no known vulnerabilities in the dependencies
 
