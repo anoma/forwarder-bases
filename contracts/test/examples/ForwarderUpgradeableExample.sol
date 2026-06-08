@@ -13,13 +13,15 @@ contract ForwarderUpgradeableExample is ForwarderBaseUpgradeable {
     function initialize( /* solhint-disable-line comprehensive-interface*/
         address protocolAdapter,
         bytes32 logicRef,
-        address owner
+        address initialOwner
     )
         external
         virtual
         initializer
     {
-        __ForwarderBaseUpgradeable_init({protocolAdapter: protocolAdapter, logicRef: logicRef, owner: owner});
+        __ForwarderBaseUpgradeable_init({
+            protocolAdapter: protocolAdapter, logicRef: logicRef, initialOwner: initialOwner
+        });
     }
 
     function _forwardCall(bytes calldata input) internal virtual override returns (bytes memory output) {
@@ -33,8 +35,14 @@ contract ForwarderUpgradeableExample is ForwarderBaseUpgradeable {
 /// @custom:oz-upgrades-from ForwarderUpgradeableExample
 contract ForwarderUpgradeableExampleV2 is ForwarderUpgradeableExample {
     // solhint-disable-next-line omprehensive-interface
-    function initialize(address protocolAdapter, bytes32 logicRef, address owner) external override reinitializer(2) {
-        __ForwarderBaseUpgradeable_init({protocolAdapter: protocolAdapter, logicRef: logicRef, owner: owner});
+    function initialize(address protocolAdapter, bytes32 logicRef, address initialOwner)
+        external
+        override
+        reinitializer(2)
+    {
+        __ForwarderBaseUpgradeable_init({
+            protocolAdapter: protocolAdapter, logicRef: logicRef, initialOwner: initialOwner
+        });
     }
 
     // solhint-disable-next-line no-empty-blocks

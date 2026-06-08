@@ -56,7 +56,6 @@ abstract contract ForwarderBaseUpgradeable is
         require(
             msg.sender == $._protocolAdapter, UnauthorizedCaller({expected: $._protocolAdapter, actual: msg.sender})
         );
-
         require($._logicRef == logicRef, UnauthorizedLogicRef({expected: $._logicRef, actual: logicRef}));
 
         output = _forwardCall(input);
@@ -78,19 +77,22 @@ abstract contract ForwarderBaseUpgradeable is
 
     // slither-disable-start dead-code
 
-    /// @notice Initializes the upgradeable forwarder base contract.
+    /// @notice Initializes the upgradeable forwarder base by calling the unchained parent initializers.
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
     /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
-    /// @param owner The owner of the forwarder contract that can upgrade the contract.
+    /// @param initialOwner The initial owner of the forwarder contract that can upgrade the contract.
     // solhint-disable-next-line func-name-mixedcase
-    function __ForwarderBaseUpgradeable_init(address protocolAdapter, bytes32 logicRef, address owner)
+    function __ForwarderBaseUpgradeable_init(address protocolAdapter, bytes32 logicRef, address initialOwner)
         internal
         onlyInitializing
     {
-        __Ownable_init({initialOwner: owner});
+        __Ownable_init_unchained({initialOwner: initialOwner});
         __ForwarderBaseUpgradeable_init_unchained({protocolAdapter: protocolAdapter, logicRef: logicRef});
     }
 
+    /// @notice Initializes the upgradeable forwarder base contract.
+    /// @param protocolAdapter The protocol adapter contract that can forward calls.
+    /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
     // solhint-disable-next-line func-name-mixedcase
     function __ForwarderBaseUpgradeable_init_unchained(address protocolAdapter, bytes32 logicRef)
         internal

@@ -39,7 +39,7 @@ contract ForwarderBaseUpgradeableInitializationTest is Test {
         ForwarderUpgradeableExample impl = new ForwarderUpgradeableExample();
         vm.expectRevert(Initializable.InvalidInitialization.selector, address(impl));
 
-        impl.initialize({protocolAdapter: _pa, logicRef: _LOGIC_REF, owner: _FORWARDER_OWNER});
+        impl.initialize({protocolAdapter: _pa, logicRef: _LOGIC_REF, initialOwner: _FORWARDER_OWNER});
     }
 
     function test_initialize_reverts_if_the_protocol_adapter_address_is_zero() public {
@@ -48,7 +48,7 @@ contract ForwarderBaseUpgradeableInitializationTest is Test {
         );
 
         vm.expectRevert(ForwarderBaseUpgradeable.ZeroNotAllowed.selector, address(uninitializedFwd));
-        uninitializedFwd.initialize({protocolAdapter: address(0), logicRef: _LOGIC_REF, owner: _FORWARDER_OWNER});
+        uninitializedFwd.initialize({protocolAdapter: address(0), logicRef: _LOGIC_REF, initialOwner: _FORWARDER_OWNER});
     }
 
     function test_initialize_reverts_if_the_logic_ref_is_zero() public {
@@ -57,7 +57,7 @@ contract ForwarderBaseUpgradeableInitializationTest is Test {
         );
 
         vm.expectRevert(ForwarderBaseUpgradeable.ZeroNotAllowed.selector, address(uninitializedFwd));
-        uninitializedFwd.initialize({protocolAdapter: _pa, logicRef: bytes32(0), owner: _FORWARDER_OWNER});
+        uninitializedFwd.initialize({protocolAdapter: _pa, logicRef: bytes32(0), initialOwner: _FORWARDER_OWNER});
     }
 
     function test_initialize_reverts_if_the_owner_is_zero() public {
@@ -69,6 +69,6 @@ contract ForwarderBaseUpgradeableInitializationTest is Test {
             abi.encodeWithSelector(OwnableUpgradeable.OwnableInvalidOwner.selector, address(0)),
             address(uninitializedFwd)
         );
-        uninitializedFwd.initialize({protocolAdapter: _pa, logicRef: _LOGIC_REF, owner: address(0)});
+        uninitializedFwd.initialize({protocolAdapter: _pa, logicRef: _LOGIC_REF, initialOwner: address(0)});
     }
 }
