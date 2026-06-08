@@ -22,7 +22,7 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
     error UnauthorizedCaller(address expected, address actual);
     error UnauthorizedLogicRef(bytes32 expected, bytes32 actual);
 
-    /// @notice Initializes the ERC-20 forwarder contract.
+    /// @notice Initializes the forwarder base contract.
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
     /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
     constructor(address protocolAdapter, bytes32 logicRef) {
