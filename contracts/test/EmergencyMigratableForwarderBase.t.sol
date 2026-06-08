@@ -5,7 +5,6 @@ import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/Reen
 
 import {EmergencyMigratableForwarderBase} from "../src/EmergencyMigratableForwarderBase.sol";
 import {ForwarderBase} from "../src/ForwarderBase.sol";
-
 import {EmergencyMigratableForwarderExample} from "./examples/EmergencyMigratableForwarderExample.sol";
 import {ForwarderExample} from "./examples/ForwarderExample.sol";
 import {
@@ -15,19 +14,17 @@ import {
     EXPECTED_OUTPUT,
     _encodedDefaultInput
 } from "./examples/ForwarderTargetExample.sol";
-
 import {ProtocolAdapterMock} from "./examples/ProtocolAdapter.m.sol";
 import {ReentrantTargetExample} from "./examples/ReentrantTargetExample.sol";
-
 import {ForwarderBaseTest} from "./ForwarderBase.t.sol";
 
 contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
-    address internal constant _EMERGENCY_COMMITTEE = address(uint160(3));
+    address internal constant _EMERGENCY_COMMITTEE = address(uint160(4));
 
     EmergencyMigratableForwarderExample internal _emrgFwd;
 
     function setUp() public override {
-        _pa = address(new ProtocolAdapterMock(_EMERGENCY_COMMITTEE));
+        _pa = address(new ProtocolAdapterMock(_PA_OWNER));
 
         _tgt = new ForwarderTargetExample();
 
