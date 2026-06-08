@@ -5,16 +5,16 @@ import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/Reen
 import {Test} from "forge-std-1.16.1/src/Test.sol";
 
 import {ForwarderBase} from "../src/ForwarderBase.sol";
-import {ForwarderExample} from "./examples/Forwarder.e.sol";
+import {ForwarderExample} from "./examples/ForwarderExample.sol";
 import {
     ForwarderTargetExample,
     INPUT_VALUE,
     OUTPUT_VALUE,
     EXPECTED_OUTPUT,
     _encodedDefaultInput
-} from "./examples/ForwarderTarget.e.sol";
+} from "./examples/ForwarderTargetExample.sol";
 import {ProtocolAdapterMock} from "./examples/ProtocolAdapter.m.sol";
-import {ReentrantTargetExample} from "./examples/ReentrantTarget.e.sol";
+import {ReentrantTargetExample} from "./examples/ReentrantTargetExample.sol";
 
 contract ForwarderBaseTest is Test {
     address internal constant _EMERGENCY_CALLER = address(uint160(1));

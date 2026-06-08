@@ -7,8 +7,8 @@ import {Test} from "forge-std-1.16.1/src/Test.sol";
 
 import {IFallbackHandler} from "../src/interfaces/IFallbackHandler.sol";
 import {TransientFallbackHandler} from "../src/TransientFallbackHandler.sol";
-import {ERC1155Example} from "./examples/ERC1155.e.sol";
-import {ERC721Example} from "./examples/ERC721.e.sol";
+import {ERC1155Example} from "./examples/ERC1155Example.sol";
+import {ERC721Example} from "./examples/ERC721Example.sol";
 
 contract TransientFallbackHandlerTest is Test {
     bytes4 internal constant _UNREGISTERED = bytes4(0);
