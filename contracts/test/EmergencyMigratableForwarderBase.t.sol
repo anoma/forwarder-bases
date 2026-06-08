@@ -112,6 +112,16 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
         _emrgFwd.forwardEmergencyCall({input: _encodedDefaultInput(address(_tgt))});
     }
 
+    function test_forwardEmergencyCall_reverts_if_the_pa_is_not_stopped() public {
+        _stopProtocolAdapter();
+        _setEmergencyCaller();
+        _resumeProtocolAdapter();
+
+        vm.prank(_EMERGENCY_CALLER);
+        vm.expectRevert(EmergencyMigratableForwarderBase.ProtocolAdapterNotStopped.selector, address(_fwd));
+        _emrgFwd.forwardEmergencyCall({input: _encodedDefaultInput(address(_tgt))});
+    }
+
     function test_forwardEmergencyCall_reverts_when_the_target_reenters() public {
         _stopProtocolAdapter();
         _setEmergencyCaller();
@@ -172,6 +182,11 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
     function _stopProtocolAdapter() internal {
         vm.prank(_PA_OWNER);
         ProtocolAdapterMock(_pa).emergencyStop();
+    }
+
+    function _resumeProtocolAdapter() internal {
+        vm.prank(_PA_OWNER);
+        ProtocolAdapterMock(_pa).resume();
     }
 
     function _setEmergencyCaller() private {
