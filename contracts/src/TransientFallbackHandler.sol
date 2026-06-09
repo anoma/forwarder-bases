@@ -18,17 +18,17 @@ import {IFallbackHandler} from "./interfaces/IFallbackHandler.sol";
 /// * ERC-165: Standard Interface Detection (https://eips.ethereum.org/EIPS/eip-165)
 /// that require a magic number to be returned via an associated callback function.
 contract TransientFallbackHandler is IFallbackHandler {
-    using SlotDerivation for bytes32;
+    using SlotDerivation for *;
     using TransientSlot for bytes32;
     using TransientSlot for TransientSlot.Bytes32Slot;
 
-    /// @notice The ERC-7201 storage location of the transient mapping between callback selectors and magic numbers.
-    /// @custom:storage-location erc7201:anoma.transient.selectorsToMagicNumbers
-    bytes32 public constant ERC7201_SELECTORS_TO_MAGIC_NUMBERS_SLOT =
-        0xaf9e352fdadaaf3b4a499b250a8d882d62ebdf001bf445271cf2d2b998b11b00;
-
     /// @notice The magic number referring to unregistered fallbacks.
     bytes4 internal constant _UNREGISTERED = bytes4(0);
+
+    /// @notice The ERC-7201 storage slot of the transient mapping between callback selectors and magic numbers.
+    /// @custom:storage-location erc7201:anoma.transient.selectorsToMagicNumbers
+    bytes32 private immutable _SELECTORS_TO_MAGIC_NUMBERS_TRANSIENT_STORAGE_SLOT =
+        "anoma.transient.selectorsToMagicNumbers".erc7201Slot();
 
     /// @notice Thrown if the selector of a calling function is not registered.
     /// @param selector The selector of the calling function.
@@ -46,14 +46,15 @@ contract TransientFallbackHandler is IFallbackHandler {
 
     /// @inheritdoc IFallbackHandler
     function registerSelector(bytes4 selector, bytes4 magicNumber) external override {
-        ERC7201_SELECTORS_TO_MAGIC_NUMBERS_SLOT.deriveMapping(bytes32(selector)).asBytes32()
+        _SELECTORS_TO_MAGIC_NUMBERS_TRANSIENT_STORAGE_SLOT.deriveMapping(bytes32(selector)).asBytes32()
             .tstore(bytes32(magicNumber));
     }
 
     /// @inheritdoc IFallbackHandler
     function lookupMagicNumber(bytes4 selector) external view override returns (bytes4 magicNumber) {
-        magicNumber =
-            bytes4(ERC7201_SELECTORS_TO_MAGIC_NUMBERS_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload());
+        magicNumber = bytes4(
+            _SELECTORS_TO_MAGIC_NUMBERS_TRANSIENT_STORAGE_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload()
+        );
     }
 
     /// @notice Handles callbacks to adaptively support ERC standards.
@@ -63,8 +64,9 @@ contract TransientFallbackHandler is IFallbackHandler {
     /// @param data The calldata.
     /// @return magicNumber The magic number registered for the function selector triggering the fallback.
     function _handleFallback(bytes4 selector, bytes memory data) internal returns (bytes4 magicNumber) {
-        magicNumber =
-            bytes4(ERC7201_SELECTORS_TO_MAGIC_NUMBERS_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload());
+        magicNumber = bytes4(
+            _SELECTORS_TO_MAGIC_NUMBERS_TRANSIENT_STORAGE_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload()
+        );
 
         require(magicNumber != _UNREGISTERED, UnregisteredSelector({selector: selector, magicNumber: magicNumber}));
 
