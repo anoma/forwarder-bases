@@ -33,7 +33,7 @@ abstract contract ForwarderBaseUpgradeable is
     }
 
     /// @notice The ERC-7201 storage location associated with the `ForwarderBaseStorage` struct.
-    bytes32 public constant FORWARDER_BASE_STORAGE_LOCATION =
+    bytes32 internal constant _FORWARDER_BASE_STORAGE_LOCATION =
         0x2bd7b6d3e7cc22d7ab1bb9e579816e4511f108e9e5b105013ce0651501830c00;
 
     error ZeroNotAllowed();
@@ -127,7 +127,7 @@ abstract contract ForwarderBaseUpgradeable is
         /* solhint-disable no-inline-assembly */
         // slither-disable-next-line assembly
         assembly {
-            store.slot := FORWARDER_BASE_STORAGE_LOCATION
+            store.slot := _FORWARDER_BASE_STORAGE_LOCATION
         }
 
         /* solhint-enable no-inline-assembly */
