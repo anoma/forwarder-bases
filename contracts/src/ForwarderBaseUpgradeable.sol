@@ -24,15 +24,15 @@ abstract contract ForwarderBaseUpgradeable is
     ReentrancyGuardTransient
 {
     /// @notice The ERC-7201 storage of the contract.
+    /// @custom:storage-location erc7201:anoma.storage.ForwarderBase
     struct ForwarderBaseStorage {
         // The protocol adapter contract that can forward calls.
         address _protocolAdapter;
-        // The reference to the logic function of the resource kind triggering the forward calls.
+        // The reference to the logic function of the resource triggering the forward calls.
         bytes32 _logicRef;
     }
 
-    /// @notice The ERC-7201 storage location of the contract.
-    /// @custom:storage-location erc7201:anoma.storage.ForwarderBase
+    /// @notice The ERC-7201 storage location associated with the `ForwarderBaseStorage` struct.
     bytes32 public constant FORWARDER_BASE_STORAGE_LOCATION =
         0x2bd7b6d3e7cc22d7ab1bb9e579816e4511f108e9e5b105013ce0651501830c00;
 
