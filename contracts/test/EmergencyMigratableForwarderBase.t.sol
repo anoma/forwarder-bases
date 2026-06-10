@@ -14,7 +14,7 @@ import {
     EXPECTED_OUTPUT,
     _encodedDefaultInput
 } from "./examples/ForwarderTargetExample.sol";
-import {ProtocolAdapterMock} from "./examples/ProtocolAdapter.m.sol";
+import {ProtocolAdapterMock} from "./mocks/ProtocolAdapterMock.sol";
 import {ReentrantTargetExample} from "./examples/ReentrantTargetExample.sol";
 import {ForwarderBaseTest} from "./ForwarderBase.t.sol";
 

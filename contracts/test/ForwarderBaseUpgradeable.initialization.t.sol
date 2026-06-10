@@ -7,10 +7,10 @@ import {Test} from "forge-std-1.16.1/src/Test.sol";
 import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.1/src/Upgrades.sol";
 
 import {ForwarderBaseUpgradeable} from "../src/ForwarderBaseUpgradeable.sol";
-import {ERC1967ProxyUnsafe} from "./examples/ERC1967ProxyUnsafe.sol";
+import {ERC1967ProxyUnsafe} from "./helpers/ERC1967ProxyUnsafe.sol";
 
 import {ForwarderUpgradeableExample} from "./examples/ForwarderUpgradeableExample.sol";
-import {ProtocolAdapterMock} from "./examples/ProtocolAdapter.m.sol";
+import {ProtocolAdapterMock} from "./mocks/ProtocolAdapterMock.sol";
 
 contract ForwarderBaseUpgradeableInitializationTest is Test {
     address internal constant _EMERGENCY_CALLER = address(uint160(1));
