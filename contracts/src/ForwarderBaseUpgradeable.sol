@@ -32,8 +32,8 @@ abstract contract ForwarderBaseUpgradeable is
         bytes32 _logicRef;
     }
 
-    /// @notice The ERC-7201 storage location associated with the `ForwarderBaseStorage` struct.
-    bytes32 internal constant _FORWARDER_BASE_STORAGE_LOCATION =
+    /// @notice The ERC-7201 storage slot associated with the `ForwarderBaseStorage` struct.
+    bytes32 internal constant _FORWARDER_BASE_STORAGE_SLOT =
         0x2bd7b6d3e7cc22d7ab1bb9e579816e4511f108e9e5b105013ce0651501830c00;
 
     error ZeroNotAllowed();
@@ -121,13 +121,13 @@ abstract contract ForwarderBaseUpgradeable is
         (newImpl);
     }
 
-    /// @notice Returns the storage from the forwarder base storage location.
+    /// @notice Returns the storage from the forwarder base storage slot.
     /// @return store The data associated with the forwarder base storage.
     function _getForwarderBaseStorage() internal pure returns (ForwarderBaseStorage storage store) {
         /* solhint-disable no-inline-assembly */
         // slither-disable-next-line assembly
         assembly {
-            store.slot := _FORWARDER_BASE_STORAGE_LOCATION
+            store.slot := _FORWARDER_BASE_STORAGE_SLOT
         }
 
         /* solhint-enable no-inline-assembly */

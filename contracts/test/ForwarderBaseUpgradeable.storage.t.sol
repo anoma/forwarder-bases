@@ -8,7 +8,7 @@ import {ForwarderBaseUpgradeable} from "../src/ForwarderBaseUpgradeable.sol";
 
 contract ForwarderBaseUpgradeableStorageTest is Test, ForwarderBaseUpgradeable {
     function test_storage_slot() public pure {
-        assertEq(_FORWARDER_BASE_STORAGE_LOCATION, SlotDerivation.erc7201Slot("anoma.storage.ForwarderBase"));
+        assertEq(_FORWARDER_BASE_STORAGE_SLOT, SlotDerivation.erc7201Slot("anoma.storage.ForwarderBase"));
     }
 
     function _forwardCall(bytes calldata input) internal pure override returns (bytes memory output) {
