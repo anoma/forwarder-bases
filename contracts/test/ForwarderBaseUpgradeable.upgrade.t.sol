@@ -43,7 +43,9 @@ contract ForwarderBaseUpgradeableUpgradeTest is Test {
             .upgradeToAndCall(newImpl, abi.encodeCall(ForwarderUpgradeableExampleV2.reinitialize, ()));
     }
 
-    function test_upgrade_upgrades_to_the_same_version() public {
+    function test_upgradeToAndCall_upgrades_to_v2() public {
+        address implBefore = Upgrades.getImplementationAddress(_fwdProxy);
+
         // `startPrank`/`stopPrank` keeps `_FORWARDER_OWNER` as the caller across the implementation deploy and the
         // `upgradeToAndCall` that `Upgrades.upgradeProxy` performs internally; a single `vm.prank` would only apply
         // to the deploy.
@@ -54,6 +56,9 @@ contract ForwarderBaseUpgradeableUpgradeTest is Test {
             abi.encodeCall(ForwarderUpgradeableExampleV2.reinitialize, ())
         );
         vm.stopPrank();
+
+        address implAfter = Upgrades.getImplementationAddress(_fwdProxy);
+        assertNotEq(implAfter, implBefore);
     }
 
     function test_upgradeToAndCall_emits_the_Upgraded_and_Initialized_events() public {
