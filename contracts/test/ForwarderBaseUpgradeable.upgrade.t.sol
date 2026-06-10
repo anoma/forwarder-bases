@@ -22,6 +22,8 @@ contract ForwarderBaseUpgradeableUpgradeTest is Test {
 
     address internal _pa;
     address internal _fwdProxy;
+    address internal _implV2;
+
     ForwarderTargetExample internal _tgt;
 
     function setUp() public {
@@ -32,20 +34,13 @@ contract ForwarderBaseUpgradeableUpgradeTest is Test {
             "ForwarderUpgradeableExample.sol:ForwarderUpgradeableExample",
             abi.encodeCall(ForwarderUpgradeableExample.initialize, (_pa, _LOGIC_REF, _FORWARDER_OWNER))
         );
-    }
 
-    function test_upgrade_reverts_if_the_caller_is_not_the_owner() public {
         Options memory opts;
-        address newImpl = Upgrades.prepareUpgrade("ForwarderUpgradeableExample.sol:ForwarderUpgradeableExampleV2", opts);
-
-        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, address(this)));
-        UUPSUpgradeable(_fwdProxy)
-            .upgradeToAndCall(newImpl, abi.encodeCall(ForwarderUpgradeableExampleV2.reinitialize, ()));
+        _implV2 = Upgrades.prepareUpgrade("ForwarderUpgradeableExample.sol:ForwarderUpgradeableExampleV2", opts);
     }
 
-    function test_upgradeToAndCall_upgrades_to_v2() public {
-        address implBefore = Upgrades.getImplementationAddress(_fwdProxy);
-
+    // This test runs the openzeppelin-foundry-upgrades checks.
+    function test_upgrades_safely() public {
         // `startPrank`/`stopPrank` keeps `_FORWARDER_OWNER` as the caller across the implementation deploy and the
         // `upgradeToAndCall` that `Upgrades.upgradeProxy` performs internally; a single `vm.prank` would only apply
         // to the deploy.
@@ -56,23 +51,37 @@ contract ForwarderBaseUpgradeableUpgradeTest is Test {
             abi.encodeCall(ForwarderUpgradeableExampleV2.reinitialize, ())
         );
         vm.stopPrank();
+    }
 
-        address implAfter = Upgrades.getImplementationAddress(_fwdProxy);
-        assertNotEq(implAfter, implBefore);
+    function test_upgradeToAndCall_reverts_if_the_caller_is_not_the_owner() public {
+        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, address(this)));
+        UUPSUpgradeable(_fwdProxy)
+            .upgradeToAndCall({
+            newImplementation: _implV2, data: abi.encodeCall(ForwarderUpgradeableExampleV2.reinitialize, ())
+        });
+    }
+
+    function test_upgradeToAndCall_upgrades_to_the_new_implementation() public {
+        vm.prank(_FORWARDER_OWNER);
+        UUPSUpgradeable(_fwdProxy)
+            .upgradeToAndCall({
+            newImplementation: _implV2, data: abi.encodeCall(ForwarderUpgradeableExampleV2.reinitialize, ())
+        });
+
+        assertEq(Upgrades.getImplementationAddress(_fwdProxy), _implV2);
     }
 
     function test_upgradeToAndCall_emits_the_Upgraded_and_Initialized_events() public {
-        Options memory opts;
-        address newImpl = Upgrades.prepareUpgrade("ForwarderUpgradeableExample.sol:ForwarderUpgradeableExampleV2", opts);
-
         vm.expectEmit(address(_fwdProxy));
-        emit IERC1967.Upgraded({implementation: newImpl});
+        emit IERC1967.Upgraded({implementation: _implV2});
 
         vm.expectEmit(_fwdProxy);
         emit Initializable.Initialized({version: 2});
 
         vm.prank(_FORWARDER_OWNER);
         UUPSUpgradeable(_fwdProxy)
-            .upgradeToAndCall(newImpl, abi.encodeCall(ForwarderUpgradeableExampleV2.reinitialize, ()));
+            .upgradeToAndCall({
+            newImplementation: _implV2, data: abi.encodeCall(ForwarderUpgradeableExampleV2.reinitialize, ())
+        });
     }
 }
