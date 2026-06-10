@@ -19,8 +19,6 @@ import {ReentrantTargetExample} from "./examples/ReentrantTargetExample.sol";
 import {ForwarderBaseTest} from "./ForwarderBase.t.sol";
 
 contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
-    address internal constant _EMERGENCY_COMMITTEE = address(uint160(4));
-
     EmergencyMigratableForwarderExample internal _emrgFwd;
 
     function setUp() public override {

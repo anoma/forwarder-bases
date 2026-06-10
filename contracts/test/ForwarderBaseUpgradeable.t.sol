@@ -2,7 +2,6 @@
 pragma solidity ^0.8.30;
 
 import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/ReentrancyGuardTransient.sol";
-import {Test} from "forge-std-1.16.1/src/Test.sol";
 import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.1/src/Upgrades.sol";
 
 import {ForwarderBaseUpgradeable} from "../src/ForwarderBaseUpgradeable.sol";
@@ -16,13 +15,9 @@ import {
 import {ForwarderUpgradeableExample} from "./examples/ForwarderUpgradeableExample.sol";
 import {ProtocolAdapterMock} from "./mocks/ProtocolAdapterMock.sol";
 import {ReentrantTargetExample} from "./examples/ReentrantTargetExample.sol";
+import {TestWithRoles} from "./helpers/TestWithRoles.sol";
 
-contract ForwarderBaseUpgradeableUpgradeableTest is Test {
-    address internal constant _EMERGENCY_CALLER = address(uint160(1));
-    address internal constant _UNAUTHORIZED_CALLER = address(uint160(2));
-    address internal constant _PA_OWNER = address(uint160(3));
-    address internal constant _FORWARDER_OWNER = address(uint160(4));
-
+contract ForwarderBaseUpgradeableUpgradeableTest is TestWithRoles {
     bytes32 internal constant _LOGIC_REF = bytes32(type(uint256).max);
 
     address internal _pa;

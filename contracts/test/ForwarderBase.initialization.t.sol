@@ -7,9 +7,6 @@ import {ForwarderBase} from "../src/ForwarderBase.sol";
 import {ForwarderExample} from "./examples/ForwarderExample.sol";
 
 contract ForwarderBaseInitializationTest is Test {
-    address internal constant _EMERGENCY_CALLER = address(uint160(1));
-    address internal constant _UNAUTHORIZED_CALLER = address(uint160(2));
-
     address internal constant _PA = address(uint160(3));
     bytes32 internal constant _LOGIC_REF = bytes32(type(uint256).max);
 
