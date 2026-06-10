@@ -34,7 +34,7 @@ contract ForwarderUpgradeableExample is ForwarderBaseUpgradeable {
 
 /// @custom:oz-upgrades-from ForwarderUpgradeableExample
 contract ForwarderUpgradeableExampleV2 is ForwarderUpgradeableExample {
-    // solhint-disable-next-line omprehensive-interface
+    // solhint-disable-next-line comprehensive-interface
     function initialize(address protocolAdapter, bytes32 logicRef, address initialOwner)
         external
         override
