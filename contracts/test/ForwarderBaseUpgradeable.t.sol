@@ -13,7 +13,6 @@ import {
     _encodedDefaultInput
 } from "./examples/ForwarderTargetExample.sol";
 import {ForwarderUpgradeableExample} from "./examples/ForwarderUpgradeableExample.sol";
-import {ProtocolAdapterMock} from "./mocks/ProtocolAdapterMock.sol";
 import {ReentrantTargetExample} from "./examples/ReentrantTargetExample.sol";
 import {TestWithRoles} from "./helpers/TestWithRoles.sol";
 
@@ -26,7 +25,7 @@ contract ForwarderBaseUpgradeableUpgradeableTest is TestWithRoles {
     ForwarderTargetExample internal _tgt;
 
     function setUp() public virtual {
-        _pa = address(new ProtocolAdapterMock(_PA_OWNER));
+        _pa = makeAddr("pa");
 
         _tgt = new ForwarderTargetExample();
         _fwd = ForwarderUpgradeableExample(

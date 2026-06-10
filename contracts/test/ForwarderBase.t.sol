@@ -12,9 +12,9 @@ import {
     EXPECTED_OUTPUT,
     _encodedDefaultInput
 } from "./examples/ForwarderTargetExample.sol";
-import {ProtocolAdapterMock} from "./mocks/ProtocolAdapterMock.sol";
 import {ReentrantTargetExample} from "./examples/ReentrantTargetExample.sol";
 import {TestWithRoles} from "./helpers/TestWithRoles.sol";
+import {ProtocolAdapterMock} from "./mocks/ProtocolAdapterMock.sol";
 
 contract ForwarderBaseTest is TestWithRoles {
     bytes32 internal constant _LOGIC_REF = bytes32(type(uint256).max);

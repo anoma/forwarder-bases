@@ -6,11 +6,10 @@ import {OwnableUpgradeable} from "@openzeppelin-contracts-upgradeable-5.6.1/acce
 import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.1/src/Upgrades.sol";
 
 import {ForwarderBaseUpgradeable} from "../src/ForwarderBaseUpgradeable.sol";
-import {ERC1967ProxyUnsafe} from "./helpers/ERC1967ProxyUnsafe.sol";
-
 import {ForwarderUpgradeableExample} from "./examples/ForwarderUpgradeableExample.sol";
-import {ProtocolAdapterMock} from "./mocks/ProtocolAdapterMock.sol";
+import {ERC1967ProxyUnsafe} from "./helpers/ERC1967ProxyUnsafe.sol";
 import {TestWithRoles} from "./helpers/TestWithRoles.sol";
+import {ProtocolAdapterMock} from "./mocks/ProtocolAdapterMock.sol";
 
 contract ForwarderBaseUpgradeableInitializationTest is TestWithRoles {
     bytes32 internal constant _LOGIC_REF = bytes32(type(uint256).max);
