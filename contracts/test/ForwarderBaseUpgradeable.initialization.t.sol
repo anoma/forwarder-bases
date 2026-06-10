@@ -71,4 +71,9 @@ contract ForwarderBaseUpgradeableInitializationTest is Test {
         );
         uninitializedFwd.initialize({protocolAdapter: _pa, logicRef: _LOGIC_REF, initialOwner: address(0)});
     }
+
+    function test_initialize_reverts_on_second_call() public {
+        vm.expectRevert(Initializable.InvalidInitialization.selector, address(_fwd));
+        _fwd.initialize({protocolAdapter: _pa, logicRef: _LOGIC_REF, initialOwner: _FORWARDER_OWNER});
+    }
 }
