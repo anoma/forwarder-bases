@@ -33,9 +33,6 @@ contract ForwarderBaseUpgradeableUpgradeTest is Test {
     }
 
     function test_upgrade_reverts_if_the_caller_is_not_the_owner() public {
-        // `Upgrades.upgradeProxy` deploys the new implementation internally, which would be swallowed by
-        // `vm.expectRevert`. Validate and deploy the implementation first, then drive the upgrade directly so the
-        // revert assertion only covers the `upgradeToAndCall` invocation.
         Options memory opts;
         address newImpl = Upgrades.prepareUpgrade("ForwarderUpgradeableExample.sol:ForwarderUpgradeableExampleV2", opts);
 
@@ -44,7 +41,7 @@ contract ForwarderBaseUpgradeableUpgradeTest is Test {
     }
 
     function test_upgrade_upgrades_to_the_same_version() public {
-        // `startPrank`/`stopPrank` keeps `_PA_OWNER` as the caller across the implementation deploy and the
+        // `startPrank`/`stopPrank` keeps `_FORWARDER_OWNER` as the caller across the implementation deploy and the
         // `upgradeToAndCall` that `Upgrades.upgradeProxy` performs internally; a single `vm.prank` would only apply
         // to the deploy.
         vm.startPrank(_FORWARDER_OWNER);
