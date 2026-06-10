@@ -37,7 +37,7 @@ contract ForwarderBaseUpgradeableUpgradeableTest is Test {
         _fwd = ForwarderUpgradeableExample(
             Upgrades.deployUUPSProxy(
                 "ForwarderUpgradeableExample.sol:ForwarderUpgradeableExample",
-                abi.encodeCall(ForwarderUpgradeableExample.initialize, (_pa, _LOGIC_REF, _PA_OWNER))
+                abi.encodeCall(ForwarderUpgradeableExample.initialize, (_pa, _LOGIC_REF, _FORWARDER_OWNER))
             )
         );
     }
