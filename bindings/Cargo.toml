@@ -11,4 +11,3 @@ edition.workspace = true
 [dependencies]
 alloy = { workspace = true }
 serde = { workspace = true }
-thiserror = { workspace = true }
