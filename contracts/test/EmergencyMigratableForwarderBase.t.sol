@@ -14,13 +14,11 @@ import {
     EXPECTED_OUTPUT,
     _encodedDefaultInput
 } from "./examples/ForwarderTargetExample.sol";
-import {ProtocolAdapterMock} from "./examples/ProtocolAdapter.m.sol";
 import {ReentrantTargetExample} from "./examples/ReentrantTargetExample.sol";
 import {ForwarderBaseTest} from "./ForwarderBase.t.sol";
+import {ProtocolAdapterMock} from "./mocks/ProtocolAdapterMock.sol";
 
 contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
-    address internal constant _EMERGENCY_COMMITTEE = address(uint160(4));
-
     EmergencyMigratableForwarderExample internal _emrgFwd;
 
     function setUp() public override {

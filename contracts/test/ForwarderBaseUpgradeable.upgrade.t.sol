@@ -4,18 +4,14 @@ pragma solidity ^0.8.30;
 import {IERC1967} from "@openzeppelin-contracts-5.6.1/interfaces/IERC1967.sol";
 import {Initializable} from "@openzeppelin-contracts-5.6.1/proxy/utils/Initializable.sol";
 import {OwnableUpgradeable} from "@openzeppelin-contracts-upgradeable-5.6.1/access/OwnableUpgradeable.sol";
-import {Test} from "forge-std-1.16.1/src/Test.sol";
 import {Options} from "openzeppelin-foundry-upgrades-0.4.1/src/Options.sol";
 import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.1/src/Upgrades.sol";
 
 import {ForwarderTargetExample} from "./examples/ForwarderTargetExample.sol";
 import {ForwarderUpgradeableExample, ForwarderUpgradeableExampleV2} from "./examples/ForwarderUpgradeableExample.sol";
+import {TestWithRoles} from "./helpers/TestWithRoles.sol";
 
-contract ForwarderBaseUpgradeableUpgradeTest is Test {
-    address internal constant _UNAUTHORIZED_CALLER = address(uint160(1));
-    address internal constant _PA_OWNER = address(uint160(2));
-    address internal constant _FORWARDER_OWNER = address(uint160(3));
-
+contract ForwarderBaseUpgradeableUpgradeTest is TestWithRoles {
     bytes32 internal constant _LOGIC_REF = bytes32(type(uint256).max);
 
     address internal _pa;
