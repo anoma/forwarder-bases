@@ -13,4 +13,3 @@ edition = "2024"
 [workspace.dependencies]
 alloy = { version = "2.0.5" }
 serde = { version = "1.0.228", default-features = false }
-
