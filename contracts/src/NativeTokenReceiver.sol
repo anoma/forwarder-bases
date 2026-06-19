@@ -11,7 +11,7 @@ contract NativeTokenReceiver is INativeTokenReceiver {
     // NOTE: The inheriting contract needs to implement a method allowing to withdraw the native tokens.
     // slither-disable-start locked-ether
 
-    /// @notice Emits the `NativeTokenDeposited` event to track native token deposits.
+    /// @notice Emits the `NativeTokenReceived` event to track native token deposits.
     /// @dev This call is bound by the gas limitations for `send`/`transfer` calls introduced by
     /// [ERC-2929](https://eips.ethereum.org/EIPS/eip-2929). Gas cost increases in future hard forks might limit this
     /// contract to receive native tokens via low-level calls.
