@@ -54,9 +54,10 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
     }
 
     function test_setEmergencyCaller_reverts_if_the_new_emergency_caller_is_the_zero_address() public {
+        _stopProtocolAdapter();
+
         vm.prank(_EMERGENCY_COMMITTEE);
         vm.expectRevert(ForwarderBase.ZeroNotAllowed.selector, address(_fwd));
-
         _emrgFwd.setEmergencyCaller(address(0));
     }
 
