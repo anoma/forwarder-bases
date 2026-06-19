@@ -57,8 +57,6 @@ contract TransientFallbackHandler is IFallbackHandler {
     }
 
     /// @notice Handles callbacks to adaptively support ERC standards.
-    /// @dev This function is supposed to be called via `_handleFallback(msg.sig, msg.data)` in the `fallback()`
-    /// function of the inheriting contract.
     /// @param selector The function selector of the callback function.
     /// @param data The calldata.
     /// @return magicNumber The magic number registered for the function selector triggering the fallback.
