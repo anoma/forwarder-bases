@@ -32,8 +32,7 @@ contract TransientFallbackHandler is IFallbackHandler {
 
     /// @notice Thrown if the selector of a calling function is not registered.
     /// @param selector The selector of the calling function.
-    /// @param magicNumber The magic number to be registered for the callback function selector.
-    error UnregisteredSelector(bytes4 selector, bytes4 magicNumber);
+    error UnregisteredSelector(bytes4 selector);
 
     /// @inheritdoc IFallbackHandler
     fallback(bytes calldata data) // solhint-disable-line payable-fallback
@@ -68,7 +67,7 @@ contract TransientFallbackHandler is IFallbackHandler {
             _SELECTORS_TO_MAGIC_NUMBERS_TRANSIENT_STORAGE_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload()
         );
 
-        require(magicNumber != _UNREGISTERED, UnregisteredSelector({selector: selector, magicNumber: magicNumber}));
+        require(magicNumber != _UNREGISTERED, UnregisteredSelector({selector: selector}));
 
         emit FallbackHandled({sender: msg.sender, selector: selector, data: data});
     }

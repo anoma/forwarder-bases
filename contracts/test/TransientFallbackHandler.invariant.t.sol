@@ -49,7 +49,7 @@ contract TransientFallbackHandlerInvariantTest is Test {
         assertFalse(ok, "fallback did not revert for a selector registered in a previous transaction");
         assertEq(
             returnData,
-            abi.encodeWithSelector(TransientFallbackHandler.UnregisteredSelector.selector, probe, _UNREGISTERED),
+            abi.encodeWithSelector(TransientFallbackHandler.UnregisteredSelector.selector, probe),
             "fallback reverted with an unexpected reason"
         );
     }

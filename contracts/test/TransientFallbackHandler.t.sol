@@ -106,9 +106,7 @@ contract TransientFallbackHandlerTest is Test {
         assertEq(_handler.lookupMagicNumber(onERC721ReceivedSelector), bytes4(0));
 
         vm.expectRevert(
-            abi.encodeWithSelector(
-                TransientFallbackHandler.UnregisteredSelector.selector, onERC721ReceivedSelector, bytes4(0)
-            ),
+            abi.encodeWithSelector(TransientFallbackHandler.UnregisteredSelector.selector, onERC721ReceivedSelector),
             address(_handler)
         );
         _erc721.mint({to: address(_handler), tokenId: 0});
@@ -160,9 +158,7 @@ contract TransientFallbackHandlerTest is Test {
         assertEq(_handler.lookupMagicNumber(onERC721ReceivedSelector), bytes4(0));
 
         vm.expectRevert(
-            abi.encodeWithSelector(
-                TransientFallbackHandler.UnregisteredSelector.selector, onERC721ReceivedSelector, bytes4(0)
-            ),
+            abi.encodeWithSelector(TransientFallbackHandler.UnregisteredSelector.selector, onERC721ReceivedSelector),
             address(_handler)
         );
         _erc721.mint({to: address(_handler), tokenId: 0});
