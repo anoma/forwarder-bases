@@ -91,7 +91,11 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
     function test_forwardEmergencyCall_reverts_if_the_pa_is_stopped_but_the_emergency_caller_is_not_set() public {
         _stopProtocolAdapter();
 
-        vm.expectRevert(EmergencyMigratableForwarderBase.EmergencyCallerNotSet.selector);
+        vm.prank(_UNAUTHORIZED_CALLER);
+        vm.expectRevert(
+            abi.encodeWithSelector(ForwarderBase.UnauthorizedCaller.selector, address(0), _UNAUTHORIZED_CALLER),
+            address(_emrgFwd)
+        );
         _emrgFwd.forwardEmergencyCall({input: _encodedDefaultInput(address(_tgt))});
     }
 
@@ -103,7 +107,8 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
 
         vm.prank(_UNAUTHORIZED_CALLER);
         vm.expectRevert(
-            abi.encodeWithSelector(ForwarderBase.UnauthorizedCaller.selector, _EMERGENCY_CALLER, _UNAUTHORIZED_CALLER)
+            abi.encodeWithSelector(ForwarderBase.UnauthorizedCaller.selector, _EMERGENCY_CALLER, _UNAUTHORIZED_CALLER),
+            address(_emrgFwd)
         );
         _emrgFwd.forwardEmergencyCall({input: _encodedDefaultInput(address(_tgt))});
     }

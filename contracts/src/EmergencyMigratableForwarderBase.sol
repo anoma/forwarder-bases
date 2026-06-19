@@ -17,7 +17,6 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
     /// @notice The emergency caller that the emergency committee can set once.
     address internal _emergencyCaller;
 
-    error EmergencyCallerNotSet();
     error EmergencyCallerAlreadySet(address emergencyCaller);
     error ProtocolAdapterNotStopped();
 
@@ -36,7 +35,6 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
 
     /// @inheritdoc IEmergencyMigratable
     function forwardEmergencyCall(bytes calldata input) external nonReentrant returns (bytes memory output) {
-        require(_emergencyCaller != address(0), EmergencyCallerNotSet());
         require(msg.sender == _emergencyCaller, UnauthorizedCaller({expected: _emergencyCaller, actual: msg.sender}));
         require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
 
