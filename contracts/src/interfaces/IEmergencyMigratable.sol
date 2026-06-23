@@ -9,6 +9,13 @@ interface IEmergencyMigratable {
     /// @param emergencyCaller The address of the emergencyCaller.
     event EmergencyCallerSet(address indexed emergencyCaller);
 
+    error ZeroEmergencyCommitteeNotAllowed();
+    error EmergencyCommitteeMismatch(address expected, address actual);
+
+    error ZeroEmergencyCallerNotAllowed();
+    error EmergencyCallerMismatch(address expected, address actual);
+    error EmergencyCallerAlreadySet(address emergencyCaller);
+
     /// @notice Forwards an external call to read or write EVM state. This function can only be called by the address
     /// set by emergency committee if the RISC Zero emergency stop is active.
     /// @param input The `bytes` encoded calldata (including the `bytes4` function selector).

@@ -5,6 +5,9 @@ pragma solidity ^0.8.30;
 /// @author Anoma Foundation, 2026
 /// @notice The interface of contracts being associated with a specific protocol adapter.
 interface IProtocolAdapterSpecific {
+    error ZeroProtocolAdapterNotAllowed();
+    error ProtocolAdapterMismatch(address expected, address actual);
+
     /// @notice Returns the protocol adapter contract address this contract is associated with.
     /// @return protocolAdapter The protocol adapter contract address.
     function getProtocolAdapter() external view returns (address protocolAdapter);

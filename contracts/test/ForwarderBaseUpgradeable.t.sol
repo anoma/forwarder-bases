@@ -5,7 +5,8 @@ import {ERC1967Proxy} from "@openzeppelin-contracts-5.6.1/proxy/ERC1967/ERC1967P
 import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/ReentrancyGuardTransient.sol";
 import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.1/src/Upgrades.sol";
 
-import {ForwarderBaseUpgradeable} from "../src/ForwarderBaseUpgradeable.sol";
+import {ILogicRefSpecific} from "../src/interfaces/ILogicRefSpecific.sol";
+import {IProtocolAdapterSpecific} from "../src/interfaces/IProtocolAdapterSpecific.sol";
 import {
     ForwarderTargetExample,
     INPUT_VALUE,
@@ -40,7 +41,9 @@ contract ForwarderBaseUpgradeableUpgradeableTest is TestWithRoles {
     function test_forwardCall_reverts_if_the_pa_is_not_the_caller() public {
         vm.prank(_UNAUTHORIZED_CALLER);
         vm.expectRevert(
-            abi.encodeWithSelector(ForwarderBaseUpgradeable.UnauthorizedCaller.selector, _pa, _UNAUTHORIZED_CALLER),
+            abi.encodeWithSelector(
+                IProtocolAdapterSpecific.ProtocolAdapterMismatch.selector, _pa, _UNAUTHORIZED_CALLER
+            ),
             address(_fwd)
         );
         _fwd.forwardCall({logicRef: _LOGIC_REF, input: _encodedDefaultInput(address(_tgt))});
@@ -53,7 +56,7 @@ contract ForwarderBaseUpgradeableUpgradeableTest is TestWithRoles {
 
         vm.prank(_pa);
         vm.expectRevert(
-            abi.encodeWithSelector(ForwarderBaseUpgradeable.UnauthorizedLogicRef.selector, _LOGIC_REF, wrongLogicRef),
+            abi.encodeWithSelector(ILogicRefSpecific.LogicRefMismatch.selector, _LOGIC_REF, wrongLogicRef),
             address(_fwd)
         );
         _fwd.forwardCall({logicRef: wrongLogicRef, input: _encodedDefaultInput(address(_tgt))});

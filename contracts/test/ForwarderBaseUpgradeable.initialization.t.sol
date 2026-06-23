@@ -5,7 +5,8 @@ import {Initializable} from "@openzeppelin-contracts-5.6.1/proxy/utils/Initializ
 import {OwnableUpgradeable} from "@openzeppelin-contracts-upgradeable-5.6.1/access/OwnableUpgradeable.sol";
 import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.1/src/Upgrades.sol";
 
-import {ForwarderBaseUpgradeable} from "../src/ForwarderBaseUpgradeable.sol";
+import {ILogicRefSpecific} from "../src/interfaces/ILogicRefSpecific.sol";
+import {IProtocolAdapterSpecific} from "../src/interfaces/IProtocolAdapterSpecific.sol";
 import {ForwarderUpgradeableExample} from "./examples/ForwarderUpgradeableExample.sol";
 import {ERC1967ProxyUnsafe} from "./helpers/ERC1967ProxyUnsafe.sol";
 import {TestWithRoles} from "./helpers/TestWithRoles.sol";
@@ -41,7 +42,7 @@ contract ForwarderBaseUpgradeableInitializationTest is TestWithRoles {
             address(new ERC1967ProxyUnsafe(address(new ForwarderUpgradeableExample()), ""))
         );
 
-        vm.expectRevert(ForwarderBaseUpgradeable.ZeroProtocolAdapterNotAllowed.selector, address(uninitializedFwd));
+        vm.expectRevert(IProtocolAdapterSpecific.ZeroProtocolAdapterNotAllowed.selector, address(uninitializedFwd));
         uninitializedFwd.initialize({protocolAdapter: address(0), logicRef: _LOGIC_REF, initialOwner: _FORWARDER_OWNER});
     }
 
@@ -50,7 +51,7 @@ contract ForwarderBaseUpgradeableInitializationTest is TestWithRoles {
             address(new ERC1967ProxyUnsafe(address(new ForwarderUpgradeableExample()), ""))
         );
 
-        vm.expectRevert(ForwarderBaseUpgradeable.ZeroLogicRefNotAllowed.selector, address(uninitializedFwd));
+        vm.expectRevert(ILogicRefSpecific.ZeroLogicRefNotAllowed.selector, address(uninitializedFwd));
         uninitializedFwd.initialize({protocolAdapter: _pa, logicRef: bytes32(0), initialOwner: _FORWARDER_OWNER});
     }
 
