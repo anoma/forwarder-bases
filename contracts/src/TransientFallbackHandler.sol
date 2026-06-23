@@ -35,6 +35,9 @@ contract TransientFallbackHandler is IFallbackHandler {
     /// @param magicNumber The magic number to be registered for the callback function selector.
     error UnregisteredSelector(bytes4 selector, bytes4 magicNumber);
 
+    /// @notice Thrown if the call is not coming from the inheriting contract.
+    error NonSelfCallNotAllowed();
+
     /// @inheritdoc IFallbackHandler
     fallback(bytes calldata data) // solhint-disable-line payable-fallback
         external
@@ -46,6 +49,7 @@ contract TransientFallbackHandler is IFallbackHandler {
 
     /// @inheritdoc IFallbackHandler
     function registerSelector(bytes4 selector, bytes4 magicNumber) external override {
+        require(msg.sender == address(this), NonSelfCallNotAllowed());
         _SELECTORS_TO_MAGIC_NUMBERS_TRANSIENT_STORAGE_SLOT.deriveMapping(bytes32(selector)).asBytes32()
             .tstore(bytes32(magicNumber));
     }
