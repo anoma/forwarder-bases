@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
+import {ERC1967Proxy} from "@openzeppelin-contracts-5.6.1/proxy/ERC1967/ERC1967Proxy.sol";
 import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/ReentrancyGuardTransient.sol";
 import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.1/src/Upgrades.sol";
 
@@ -98,5 +99,21 @@ contract ForwarderBaseUpgradeableUpgradeableTest is TestWithRoles {
 
     function test_getLogicRef_returns_the_logic_ref() public view {
         assertEq(_fwd.getLogicRef(), _LOGIC_REF);
+    }
+
+    function test_getImplementation_returns_the_implementation_address() public {
+        ForwarderUpgradeableExample implementation = new ForwarderUpgradeableExample();
+
+        // Deploy a proxy delegating to the known implementation.
+        ForwarderUpgradeableExample fwd = ForwarderUpgradeableExample(
+            address(
+                new ERC1967Proxy(
+                    address(implementation),
+                    abi.encodeCall(ForwarderUpgradeableExample.initialize, (_pa, _LOGIC_REF, _FORWARDER_OWNER))
+                )
+            )
+        );
+
+        assertEq(fwd.getImplementation(), address(implementation));
     }
 }
