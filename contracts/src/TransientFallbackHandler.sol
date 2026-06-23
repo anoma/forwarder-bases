@@ -17,6 +17,7 @@ import {IFallbackHandler} from "./interfaces/IFallbackHandler.sol";
 /// * ERC-1155: Multi Token Standard (https://eips.ethereum.org/EIPS/eip-1155)
 /// * ERC-165: Standard Interface Detection (https://eips.ethereum.org/EIPS/eip-165)
 /// that require a magic number to be returned via an associated callback function.
+/// @custom:security-contact security@anoma.foundation
 contract TransientFallbackHandler is IFallbackHandler {
     using SlotDerivation for *;
     using TransientSlot for bytes32;
