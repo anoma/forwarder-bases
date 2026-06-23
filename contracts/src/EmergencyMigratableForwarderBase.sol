@@ -19,6 +19,29 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
 
     error ProtocolAdapterNotStopped();
 
+    /// @notice Ensures that the emergency caller is the function caller.
+    modifier onlyEmergencyCaller() {
+        require(
+            msg.sender == _emergencyCaller, EmergencyCallerMismatch({expected: _emergencyCaller, actual: msg.sender})
+        );
+        _;
+    }
+
+    /// @notice Ensures that the emergency committee is the function caller.
+    modifier onlyEmergencyCommittee() {
+        require(
+            msg.sender == _EMERGENCY_COMMITTEE,
+            EmergencyCommitteeMismatch({expected: _EMERGENCY_COMMITTEE, actual: msg.sender})
+        );
+        _;
+    }
+
+    /// @notice Ensures that the protocol adapter has been stopped.
+    modifier onlyWhenProtocolAdapterStopped() {
+        require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
+        _;
+    }
+
     /// @notice Initializes the contract.
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
     /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
@@ -33,22 +56,22 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
     }
 
     /// @inheritdoc IEmergencyMigratable
-    function forwardEmergencyCall(bytes calldata input) external nonReentrant returns (bytes memory output) {
-        require(
-            msg.sender == _emergencyCaller, EmergencyCallerMismatch({expected: _emergencyCaller, actual: msg.sender})
-        );
-        require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
-
+    function forwardEmergencyCall(bytes calldata input)
+        external
+        nonReentrant
+        onlyEmergencyCaller
+        onlyWhenProtocolAdapterStopped
+        returns (bytes memory output)
+    {
         output = _forwardEmergencyCall(input);
     }
 
     /// @inheritdoc IEmergencyMigratable
-    function setEmergencyCaller(address emergencyCaller) external {
-        require(
-            msg.sender == _EMERGENCY_COMMITTEE,
-            EmergencyCommitteeMismatch({expected: _EMERGENCY_COMMITTEE, actual: msg.sender})
-        );
-        require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
+    function setEmergencyCaller(address emergencyCaller)
+        external
+        onlyEmergencyCommittee
+        onlyWhenProtocolAdapterStopped
+    {
         require(emergencyCaller != address(0), ZeroEmergencyCallerNotAllowed());
         require(_emergencyCaller == address(0), EmergencyCallerAlreadySet(_emergencyCaller));
 
