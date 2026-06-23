@@ -41,7 +41,7 @@ contract ForwarderBaseUpgradeableInitializationTest is TestWithRoles {
             address(new ERC1967ProxyUnsafe(address(new ForwarderUpgradeableExample()), ""))
         );
 
-        vm.expectRevert(ForwarderBaseUpgradeable.ZeroNotAllowed.selector, address(uninitializedFwd));
+        vm.expectRevert(ForwarderBaseUpgradeable.ZeroProtocolAdapterNotAllowed.selector, address(uninitializedFwd));
         uninitializedFwd.initialize({protocolAdapter: address(0), logicRef: _LOGIC_REF, initialOwner: _FORWARDER_OWNER});
     }
 
@@ -50,7 +50,7 @@ contract ForwarderBaseUpgradeableInitializationTest is TestWithRoles {
             address(new ERC1967ProxyUnsafe(address(new ForwarderUpgradeableExample()), ""))
         );
 
-        vm.expectRevert(ForwarderBaseUpgradeable.ZeroNotAllowed.selector, address(uninitializedFwd));
+        vm.expectRevert(ForwarderBaseUpgradeable.ZeroLogicRefNotAllowed.selector, address(uninitializedFwd));
         uninitializedFwd.initialize({protocolAdapter: _pa, logicRef: bytes32(0), initialOwner: _FORWARDER_OWNER});
     }
 

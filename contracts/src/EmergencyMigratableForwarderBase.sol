@@ -17,6 +17,8 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
     /// @notice The emergency caller that the emergency committee can set once.
     address internal _emergencyCaller;
 
+    error ZeroEmergencyCommitteeNotAllowed();
+    error ZeroEmergencyCallerNotAllowed();
     error EmergencyCallerAlreadySet(address emergencyCaller);
     error ProtocolAdapterNotStopped();
 
@@ -28,7 +30,7 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
     constructor(address protocolAdapter, bytes32 logicRef, address emergencyCommittee)
         ForwarderBase(protocolAdapter, logicRef)
     {
-        require(emergencyCommittee != address(0), ZeroNotAllowed());
+        require(emergencyCommittee != address(0), ZeroEmergencyCommitteeNotAllowed());
 
         _EMERGENCY_COMMITTEE = emergencyCommittee;
     }
@@ -47,7 +49,7 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
             msg.sender == _EMERGENCY_COMMITTEE, UnauthorizedCaller({expected: _EMERGENCY_COMMITTEE, actual: msg.sender})
         );
         require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
-        require(emergencyCaller != address(0), ZeroNotAllowed());
+        require(emergencyCaller != address(0), ZeroEmergencyCallerNotAllowed());
         require(_emergencyCaller == address(0), EmergencyCallerAlreadySet(_emergencyCaller));
 
         _emergencyCaller = emergencyCaller;

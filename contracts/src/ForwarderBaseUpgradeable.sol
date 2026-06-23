@@ -39,7 +39,8 @@ abstract contract ForwarderBaseUpgradeable is
     bytes32 internal constant _FORWARDER_BASE_STORAGE_SLOT =
         0x2bd7b6d3e7cc22d7ab1bb9e579816e4511f108e9e5b105013ce0651501830c00;
 
-    error ZeroNotAllowed();
+    error ZeroProtocolAdapterNotAllowed();
+    error ZeroLogicRefNotAllowed();
     error UnauthorizedCaller(address expected, address actual);
     error UnauthorizedLogicRef(bytes32 expected, bytes32 actual);
 
@@ -103,8 +104,8 @@ abstract contract ForwarderBaseUpgradeable is
         internal
         onlyInitializing
     {
-        require(protocolAdapter != address(0), ZeroNotAllowed());
-        require(logicRef != bytes32(0), ZeroNotAllowed());
+        require(protocolAdapter != address(0), ZeroProtocolAdapterNotAllowed());
+        require(logicRef != bytes32(0), ZeroLogicRefNotAllowed());
 
         ForwarderBaseStorage storage $ = _getForwarderBaseStorage();
 

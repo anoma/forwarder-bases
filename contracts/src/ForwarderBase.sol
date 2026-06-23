@@ -18,7 +18,8 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
     /// @notice The reference to the logic function of the resource kind triggering the forward calls.
     bytes32 internal immutable _LOGIC_REF;
 
-    error ZeroNotAllowed();
+    error ZeroProtocolAdapterNotAllowed();
+    error ZeroLogicRefNotAllowed();
     error UnauthorizedCaller(address expected, address actual);
     error UnauthorizedLogicRef(bytes32 expected, bytes32 actual);
 
@@ -26,8 +27,8 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
     /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
     constructor(address protocolAdapter, bytes32 logicRef) {
-        require(protocolAdapter != address(0), ZeroNotAllowed());
-        require(logicRef != bytes32(0), ZeroNotAllowed());
+        require(protocolAdapter != address(0), ZeroProtocolAdapterNotAllowed());
+        require(logicRef != bytes32(0), ZeroLogicRefNotAllowed());
 
         _PROTOCOL_ADAPTER = protocolAdapter;
 

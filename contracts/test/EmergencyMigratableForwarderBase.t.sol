@@ -36,7 +36,7 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
     function test_constructor_reverts_if_the_emergency_committe_address_is_zero() public {
         address predicted = vm.computeCreateAddress(address(this), vm.getNonce(address(this)));
 
-        vm.expectRevert(ForwarderBase.ZeroNotAllowed.selector, predicted);
+        vm.expectRevert(EmergencyMigratableForwarderBase.ZeroEmergencyCommitteeNotAllowed.selector, predicted);
         new EmergencyMigratableForwarderExample({
             protocolAdapter: _pa, emergencyCommittee: address(0), logicRef: _LOGIC_REF
         });
@@ -57,7 +57,7 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
         _stopProtocolAdapter();
 
         vm.prank(_EMERGENCY_COMMITTEE);
-        vm.expectRevert(ForwarderBase.ZeroNotAllowed.selector, address(_fwd));
+        vm.expectRevert(EmergencyMigratableForwarderBase.ZeroEmergencyCallerNotAllowed.selector, address(_fwd));
         _emrgFwd.setEmergencyCaller(address(0));
     }
 
