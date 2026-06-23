@@ -129,21 +129,6 @@ contract TransientFallbackHandlerTest is Test {
         assertEq(abi.decode(returnData, (bytes4)), magicNumber, "fallback returned an unexpected magic number");
     }
 
-    function test_registerSelector_distinct_selectors_do_not_collide(
-        bytes4 selectorA,
-        bytes4 magicNumberA,
-        bytes4 selectorB,
-        bytes4 magicNumberB
-    ) public {
-        vm.assume(selectorA != selectorB);
-
-        _handler.registerSelector({selector: selectorA, magicNumber: magicNumberA});
-        _handler.registerSelector({selector: selectorB, magicNumber: magicNumberB});
-
-        assertEq(_handler.lookupMagicNumber(selectorA), magicNumberA, "selectorA returned an unexpected magic number");
-        assertEq(_handler.lookupMagicNumber(selectorB), magicNumberB, "selectorB returned an unexpected magic number");
-    }
-
     function testFuzz_registerSelector_distinct_selectors_do_not_collide(
         bytes4 selectorA,
         bytes4 selectorB,
