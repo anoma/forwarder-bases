@@ -5,6 +5,10 @@ pragma solidity ^0.8.30;
 /// @author Anoma Foundation, 2026
 /// @notice The interface of emergency migratable forwarder contracts.
 interface IEmergencyMigratable {
+    /// @notice Emitted when the emergency caller is set.
+    /// @param emergencyCaller The address of the emergencyCaller.
+    event EmergencyCallerSet(address indexed emergencyCaller);
+
     /// @notice Forwards an external call to read or write EVM state. This function can only be called by the address
     /// set by emergency committee if the RISC Zero emergency stop is active.
     /// @param input The `bytes` encoded calldata (including the `bytes4` function selector).

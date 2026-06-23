@@ -53,6 +53,8 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
         require(_emergencyCaller == address(0), EmergencyCallerAlreadySet(_emergencyCaller));
 
         _emergencyCaller = emergencyCaller;
+
+        emit EmergencyCallerSet({emergencyCaller: emergencyCaller});
     }
 
     /// @inheritdoc IEmergencyMigratable

@@ -5,6 +5,7 @@ import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/Reen
 
 import {EmergencyMigratableForwarderBase} from "../src/EmergencyMigratableForwarderBase.sol";
 import {ForwarderBase} from "../src/ForwarderBase.sol";
+import {IEmergencyMigratable} from "../src/interfaces/IEmergencyMigratable.sol";
 import {EmergencyMigratableForwarderExample} from "./examples/EmergencyMigratableForwarderExample.sol";
 import {ForwarderExample} from "./examples/ForwarderExample.sol";
 import {
@@ -86,6 +87,14 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
         _setEmergencyCaller();
 
         assertEq(_emrgFwd.getEmergencyCaller(), _EMERGENCY_CALLER);
+    }
+
+    function test_setEmergencyCaller_emits_the_EmergencyCallerSet_event() public {
+        _stopProtocolAdapter();
+
+        vm.expectEmit(address(_fwd));
+        emit IEmergencyMigratable.EmergencyCallerSet({emergencyCaller: _EMERGENCY_CALLER});
+        _setEmergencyCaller();
     }
 
     function test_forwardEmergencyCall_reverts_if_the_pa_is_stopped_but_the_emergency_caller_is_not_set() public {
