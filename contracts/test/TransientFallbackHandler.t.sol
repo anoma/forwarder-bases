@@ -33,6 +33,7 @@ contract TransientFallbackHandlerTest is Test {
         vm.assume(selector != IFallbackHandler.lookupMagicNumber.selector);
         vm.assume(magicNumber != _UNREGISTERED);
 
+        vm.prank(address(_handler));
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
 
         assertEq(_handler.lookupMagicNumber(selector), magicNumber, "An unexpected magic number got returned");
@@ -46,9 +47,10 @@ contract TransientFallbackHandlerTest is Test {
         vm.assume(selector != IFallbackHandler.lookupMagicNumber.selector);
         vm.assume(magicNumber != _UNREGISTERED);
 
+        vm.startPrank(address(_handler));
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
-
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
+        vm.stopPrank();
 
         assertEq(_handler.lookupMagicNumber(selector), magicNumber, "An unexpected magic number got returned");
     }
@@ -63,8 +65,10 @@ contract TransientFallbackHandlerTest is Test {
         vm.assume(magicNumber != _UNREGISTERED);
         vm.assume(differentMagicNumber != _UNREGISTERED);
 
+        vm.startPrank(address(_handler));
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
         _handler.registerSelector({selector: selector, magicNumber: differentMagicNumber});
+        vm.stopPrank();
 
         assertEq(_handler.lookupMagicNumber(selector), differentMagicNumber, "An unexpected magic number got returned");
     }
@@ -72,6 +76,7 @@ contract TransientFallbackHandlerTest is Test {
     function test_handleFallback_handles_onERC721Received_callbacks() public {
         bytes4 onERC721ReceivedSelector = IERC721Receiver.onERC721Received.selector;
 
+        vm.prank(address(_handler));
         _handler.registerSelector({selector: onERC721ReceivedSelector, magicNumber: onERC721ReceivedSelector});
         _erc721.mint({to: address(_handler), tokenId: 0});
     }
@@ -79,6 +84,7 @@ contract TransientFallbackHandlerTest is Test {
     function test_handleFallback_handles_onERC1155Received_callback() public {
         bytes4 onERC1155ReceivedSelector = IERC1155Receiver.onERC1155Received.selector;
 
+        vm.prank(address(_handler));
         _handler.registerSelector({selector: onERC1155ReceivedSelector, magicNumber: onERC1155ReceivedSelector});
         _erc1155.mint({to: address(_handler), id: 0, amount: 1});
     }
@@ -88,6 +94,7 @@ contract TransientFallbackHandlerTest is Test {
         vm.assume(selector != IFallbackHandler.lookupMagicNumber.selector);
         vm.assume(magicNumber != _UNREGISTERED);
 
+        vm.prank(address(_handler));
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
 
         bytes memory data = abi.encodeWithSelector(selector, uint256(42), keccak256("payload"));
@@ -119,12 +126,21 @@ contract TransientFallbackHandlerTest is Test {
         vm.assume(selector != IFallbackHandler.lookupMagicNumber.selector);
         vm.assume(magicNumber != _UNREGISTERED);
 
+        vm.prank(address(_handler));
         _handler.registerSelector({selector: selector, magicNumber: magicNumber});
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, bytes memory returnData) = address(_handler).call(abi.encodeWithSelector(selector));
         assertTrue(success, "fallback call failed");
         assertEq(abi.decode(returnData, (bytes4)), magicNumber, "fallback returned an unexpected magic number");
+    }
+
+    function testFuzz_registerSelector_reverts_on_non_self_call(bytes4 selector, bytes4 magicNumber) public {
+        vm.expectRevert(
+            abi.encodeWithSelector(TransientFallbackHandler.NonSelfCallNotAllowed.selector, address(this)),
+            address(_handler)
+        );
+        _handler.registerSelector({selector: selector, magicNumber: magicNumber});
     }
 
     function testFuzz_registerSelector_distinct_selectors_do_not_collide(
@@ -141,8 +157,10 @@ contract TransientFallbackHandlerTest is Test {
         vm.assume(magicNumberA != bytes4(0));
         vm.assume(magicNumberB != bytes4(0));
 
+        vm.startPrank(address(_handler));
         _handler.registerSelector({selector: selectorA, magicNumber: magicNumberA});
         _handler.registerSelector({selector: selectorB, magicNumber: magicNumberB});
+        vm.stopPrank();
 
         assertEq(_handler.lookupMagicNumber(selectorA), magicNumberA, "selectorA returned an unexpected magic number");
         assertEq(_handler.lookupMagicNumber(selectorB), magicNumberB, "selectorB returned an unexpected magic number");
@@ -151,9 +169,11 @@ contract TransientFallbackHandlerTest is Test {
     function test_registerSelector_with_zero_magic_number_disables_a_previously_registered_callback() public {
         bytes4 onERC721ReceivedSelector = IERC721Receiver.onERC721Received.selector;
 
+        vm.prank(address(_handler));
         _handler.registerSelector({selector: onERC721ReceivedSelector, magicNumber: onERC721ReceivedSelector});
         assertEq(_handler.lookupMagicNumber(onERC721ReceivedSelector), onERC721ReceivedSelector);
 
+        vm.prank(address(_handler));
         _handler.registerSelector({selector: onERC721ReceivedSelector, magicNumber: bytes4(0)});
         assertEq(_handler.lookupMagicNumber(onERC721ReceivedSelector), bytes4(0));
 
