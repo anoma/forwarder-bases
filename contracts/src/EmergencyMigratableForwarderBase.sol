@@ -17,6 +17,7 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
     /// @notice The emergency caller that the emergency committee can set once.
     address internal _emergencyCaller;
 
+    /// @notice Thrown if the associated protocol adapter is not stopped.
     error ProtocolAdapterNotStopped();
 
     /// @notice Ensures that the emergency caller is the function caller.
