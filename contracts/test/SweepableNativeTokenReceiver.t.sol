@@ -17,7 +17,9 @@ contract SweepableNativeTokenReceiverTest is NativeTokenReceiverTest {
     function test_sweep_sweeps_full_erc20_balance_to_recipient() public {
         _erc20.mint({to: _receiver, value: _AMOUNT});
 
-        // Anyone can sweep residual dust; here an arbitrary caller collects it to `_ALICE`.
+        assertEq(_erc20.balanceOf(_receiver), _AMOUNT);
+        assertEq(_erc20.balanceOf(_ALICE), 0);
+
         vm.expectEmit(_receiver);
         emit ISweepable.Swept({token: address(_erc20), to: _ALICE, amount: _AMOUNT});
         uint256 amount = ISweepable(_receiver).sweep({token: address(_erc20), to: _ALICE});
@@ -29,6 +31,9 @@ contract SweepableNativeTokenReceiverTest is NativeTokenReceiverTest {
 
     function test_sweep_sweeps_full_native_balance_to_recipient() public {
         vm.deal(_receiver, _AMOUNT);
+
+        assertEq(_receiver.balance, _AMOUNT);
+        assertEq(_ALICE.balance, 0);
 
         vm.expectEmit(_receiver);
         emit ISweepable.Swept({token: address(0), to: _ALICE, amount: _AMOUNT});
