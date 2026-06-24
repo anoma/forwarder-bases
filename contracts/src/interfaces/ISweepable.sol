@@ -13,8 +13,8 @@ interface ISweepable {
     event Swept(address indexed token, address indexed to, uint256 amount);
 
     /// @notice Sweeps the full balance of native or ERC-20 tokens held by this contract to a recipient.
-    /// @param token The ERC-20 token to withdraw, or the zero address to withdraw native tokens.
-    /// @param to The recipient of the withdrawn tokens.
+    /// @param token The ERC-20 token to sweep, or the zero address to sweep native tokens.
+    /// @param to The recipient of the swept tokens.
     /// @return amount The swept amount.
     function sweep(address token, address to) external returns (uint256 amount);
 }
