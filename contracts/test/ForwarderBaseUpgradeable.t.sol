@@ -96,14 +96,6 @@ contract ForwarderBaseUpgradeableTest is TestWithRoles {
         _fwd.forwardCall({logicRef: _LOGIC_REF, input: _encodedDefaultInput(address(_tgt))});
     }
 
-    function test_getProtocolAdapter_returns_the_protocol_adapter_address() public view {
-        assertEq(_fwd.getProtocolAdapter(), _pa);
-    }
-
-    function test_getLogicRef_returns_the_logic_ref() public view {
-        assertEq(_fwd.getLogicRef(), _LOGIC_REF);
-    }
-
     function test_getImplementation_returns_the_implementation_address() public {
         ForwarderUpgradeableExample implementation = new ForwarderUpgradeableExample();
 
@@ -118,5 +110,13 @@ contract ForwarderBaseUpgradeableTest is TestWithRoles {
         );
 
         assertEq(fwd.getImplementation(), address(implementation));
+    }
+
+    function test_getProtocolAdapter_returns_the_protocol_adapter_address() public view {
+        assertEq(_fwd.getProtocolAdapter(), _pa);
+    }
+
+    function test_getLogicRef_returns_the_logic_ref() public view {
+        assertEq(_fwd.getLogicRef(), _LOGIC_REF);
     }
 }
