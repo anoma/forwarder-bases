@@ -10,4 +10,5 @@ pub mod i_implementation;
 pub mod i_logic_ref_specific;
 pub mod i_native_token_receiver;
 pub mod i_protocol_adapter_specific;
+pub mod i_sweepable;
 pub mod i_version;

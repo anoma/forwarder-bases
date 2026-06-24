@@ -9,7 +9,7 @@ import {IProtocolAdapterSpecific} from "./interfaces/IProtocolAdapterSpecific.so
 
 /// @title ForwarderBase
 /// @author Anoma Foundation, 2026
-/// @notice A base contract for protocol-adapter- and logic-reference-specific forwarders.
+/// @notice A base contract for non-reentrant, protocol-adapter- and logic-reference-specific forwarders.
 /// @custom:security-contact security@anoma.foundation
 abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicRefSpecific, ReentrancyGuardTransient {
     /// @notice The protocol adapter contract that can forward calls.
@@ -18,16 +18,28 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
     /// @notice The reference to the logic function of the resource kind triggering the forward calls.
     bytes32 internal immutable _LOGIC_REF;
 
-    error ZeroNotAllowed();
-    error UnauthorizedCaller(address expected, address actual);
-    error UnauthorizedLogicRef(bytes32 expected, bytes32 actual);
+    /// @notice Ensures that the protocol adapter is the function caller.
+    modifier onlyProtocolAdapter() {
+        require(
+            msg.sender == _PROTOCOL_ADAPTER, ProtocolAdapterMismatch({expected: _PROTOCOL_ADAPTER, actual: msg.sender})
+        );
+        _;
+    }
+
+    /// @notice Ensures that the function call is triggered by a resource with the logic reference the forwarder is
+    /// associated with.
+    /// @param logicRef The logic reference of the resource triggering the forward call.
+    modifier onlyLogicRef(bytes32 logicRef) {
+        require(_LOGIC_REF == logicRef, LogicRefMismatch({expected: _LOGIC_REF, actual: logicRef}));
+        _;
+    }
 
     /// @notice Initializes the forwarder base contract.
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
     /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
     constructor(address protocolAdapter, bytes32 logicRef) {
-        require(protocolAdapter != address(0), ZeroNotAllowed());
-        require(logicRef != bytes32(0), ZeroNotAllowed());
+        require(protocolAdapter != address(0), ZeroProtocolAdapterNotAllowed());
+        require(logicRef != bytes32(0), ZeroLogicRefNotAllowed());
 
         _PROTOCOL_ADAPTER = protocolAdapter;
 
@@ -35,10 +47,13 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
     }
 
     /// @inheritdoc IForwarder
-    function forwardCall(bytes32 logicRef, bytes calldata input) external nonReentrant returns (bytes memory output) {
-        require(msg.sender == _PROTOCOL_ADAPTER, UnauthorizedCaller({expected: _PROTOCOL_ADAPTER, actual: msg.sender}));
-        require(_LOGIC_REF == logicRef, UnauthorizedLogicRef({expected: _LOGIC_REF, actual: logicRef}));
-
+    function forwardCall(bytes32 logicRef, bytes calldata input)
+        external
+        nonReentrant
+        onlyProtocolAdapter
+        onlyLogicRef(logicRef)
+        returns (bytes memory output)
+    {
         output = _forwardCall(input);
     }
 

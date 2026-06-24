@@ -3,7 +3,8 @@ pragma solidity ^0.8.30;
 
 import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/ReentrancyGuardTransient.sol";
 
-import {ForwarderBase} from "../src/ForwarderBase.sol";
+import {ILogicRefSpecific} from "../src/interfaces/ILogicRefSpecific.sol";
+import {IProtocolAdapterSpecific} from "../src/interfaces/IProtocolAdapterSpecific.sol";
 import {ForwarderExample} from "./examples/ForwarderExample.sol";
 import {
     ForwarderTargetExample,
@@ -34,7 +35,10 @@ contract ForwarderBaseTest is TestWithRoles {
     function test_forwardCall_reverts_if_the_pa_is_not_the_caller() public {
         vm.prank(_UNAUTHORIZED_CALLER);
         vm.expectRevert(
-            abi.encodeWithSelector(ForwarderBase.UnauthorizedCaller.selector, _pa, _UNAUTHORIZED_CALLER), address(_fwd)
+            abi.encodeWithSelector(
+                IProtocolAdapterSpecific.ProtocolAdapterMismatch.selector, _pa, _UNAUTHORIZED_CALLER
+            ),
+            address(_fwd)
         );
         _fwd.forwardCall({logicRef: _LOGIC_REF, input: _encodedDefaultInput(address(_tgt))});
     }
@@ -46,7 +50,7 @@ contract ForwarderBaseTest is TestWithRoles {
 
         vm.prank(_pa);
         vm.expectRevert(
-            abi.encodeWithSelector(ForwarderBase.UnauthorizedLogicRef.selector, _LOGIC_REF, wrongLogicRef),
+            abi.encodeWithSelector(ILogicRefSpecific.LogicRefMismatch.selector, _LOGIC_REF, wrongLogicRef),
             address(_fwd)
         );
         _fwd.forwardCall({logicRef: wrongLogicRef, input: _encodedDefaultInput(address(_tgt))});

@@ -17,9 +17,31 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
     /// @notice The emergency caller that the emergency committee can set once.
     address internal _emergencyCaller;
 
-    error EmergencyCallerNotSet();
-    error EmergencyCallerAlreadySet(address emergencyCaller);
+    /// @notice Thrown if the associated protocol adapter is not stopped.
     error ProtocolAdapterNotStopped();
+
+    /// @notice Ensures that the emergency caller is the function caller.
+    modifier onlyEmergencyCaller() {
+        require(
+            msg.sender == _emergencyCaller, EmergencyCallerMismatch({expected: _emergencyCaller, actual: msg.sender})
+        );
+        _;
+    }
+
+    /// @notice Ensures that the emergency committee is the function caller.
+    modifier onlyEmergencyCommittee() {
+        require(
+            msg.sender == _EMERGENCY_COMMITTEE,
+            EmergencyCommitteeMismatch({expected: _EMERGENCY_COMMITTEE, actual: msg.sender})
+        );
+        _;
+    }
+
+    /// @notice Ensures that the protocol adapter has been stopped.
+    modifier onlyWhenProtocolAdapterStopped() {
+        require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
+        _;
+    }
 
     /// @notice Initializes the contract.
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
@@ -29,30 +51,34 @@ abstract contract EmergencyMigratableForwarderBase is IEmergencyMigratable, Forw
     constructor(address protocolAdapter, bytes32 logicRef, address emergencyCommittee)
         ForwarderBase(protocolAdapter, logicRef)
     {
-        require(emergencyCommittee != address(0), ZeroNotAllowed());
+        require(emergencyCommittee != address(0), ZeroEmergencyCommitteeNotAllowed());
 
         _EMERGENCY_COMMITTEE = emergencyCommittee;
     }
 
     /// @inheritdoc IEmergencyMigratable
-    function forwardEmergencyCall(bytes calldata input) external nonReentrant returns (bytes memory output) {
-        require(_emergencyCaller != address(0), EmergencyCallerNotSet());
-        require(msg.sender == _emergencyCaller, UnauthorizedCaller({expected: _emergencyCaller, actual: msg.sender}));
-        require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
-
+    function forwardEmergencyCall(bytes calldata input)
+        external
+        nonReentrant
+        onlyEmergencyCaller
+        onlyWhenProtocolAdapterStopped
+        returns (bytes memory output)
+    {
         output = _forwardEmergencyCall(input);
     }
 
     /// @inheritdoc IEmergencyMigratable
-    function setEmergencyCaller(address emergencyCaller) external {
+    function setEmergencyCaller(address emergencyCaller)
+        external
+        onlyEmergencyCommittee
+        onlyWhenProtocolAdapterStopped
+    {
+        require(emergencyCaller != address(0), ZeroEmergencyCallerNotAllowed());
         require(_emergencyCaller == address(0), EmergencyCallerAlreadySet(_emergencyCaller));
-        require(emergencyCaller != address(0), ZeroNotAllowed());
-        require(
-            msg.sender == _EMERGENCY_COMMITTEE, UnauthorizedCaller({expected: _EMERGENCY_COMMITTEE, actual: msg.sender})
-        );
-        require(Pausable(_PROTOCOL_ADAPTER).paused(), ProtocolAdapterNotStopped());
 
         _emergencyCaller = emergencyCaller;
+
+        emit EmergencyCallerSet({emergencyCaller: emergencyCaller});
     }
 
     /// @inheritdoc IEmergencyMigratable

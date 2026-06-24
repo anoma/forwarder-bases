@@ -4,7 +4,7 @@ pragma solidity ^0.8.30;
 import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/ReentrancyGuardTransient.sol";
 
 import {EmergencyMigratableForwarderBase} from "../src/EmergencyMigratableForwarderBase.sol";
-import {ForwarderBase} from "../src/ForwarderBase.sol";
+import {IEmergencyMigratable} from "../src/interfaces/IEmergencyMigratable.sol";
 import {EmergencyMigratableForwarderExample} from "./examples/EmergencyMigratableForwarderExample.sol";
 import {ForwarderExample} from "./examples/ForwarderExample.sol";
 import {
@@ -36,7 +36,7 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
     function test_constructor_reverts_if_the_emergency_committe_address_is_zero() public {
         address predicted = vm.computeCreateAddress(address(this), vm.getNonce(address(this)));
 
-        vm.expectRevert(ForwarderBase.ZeroNotAllowed.selector, predicted);
+        vm.expectRevert(IEmergencyMigratable.ZeroEmergencyCommitteeNotAllowed.selector, predicted);
         new EmergencyMigratableForwarderExample({
             protocolAdapter: _pa, emergencyCommittee: address(0), logicRef: _LOGIC_REF
         });
@@ -46,7 +46,7 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
         vm.prank(_UNAUTHORIZED_CALLER);
         vm.expectRevert(
             abi.encodeWithSelector(
-                ForwarderBase.UnauthorizedCaller.selector, _EMERGENCY_COMMITTEE, _UNAUTHORIZED_CALLER
+                IEmergencyMigratable.EmergencyCommitteeMismatch.selector, _EMERGENCY_COMMITTEE, _UNAUTHORIZED_CALLER
             ),
             address(_fwd)
         );
@@ -54,9 +54,10 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
     }
 
     function test_setEmergencyCaller_reverts_if_the_new_emergency_caller_is_the_zero_address() public {
-        vm.prank(_EMERGENCY_COMMITTEE);
-        vm.expectRevert(ForwarderBase.ZeroNotAllowed.selector, address(_fwd));
+        _stopProtocolAdapter();
 
+        vm.prank(_EMERGENCY_COMMITTEE);
+        vm.expectRevert(IEmergencyMigratable.ZeroEmergencyCallerNotAllowed.selector, address(_fwd));
         _emrgFwd.setEmergencyCaller(address(0));
     }
 
@@ -66,9 +67,7 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
 
         vm.prank(_EMERGENCY_COMMITTEE);
         vm.expectRevert(
-            abi.encodeWithSelector(
-                EmergencyMigratableForwarderBase.EmergencyCallerAlreadySet.selector, _EMERGENCY_CALLER
-            ),
+            abi.encodeWithSelector(IEmergencyMigratable.EmergencyCallerAlreadySet.selector, _EMERGENCY_CALLER),
             address(_fwd)
         );
         _emrgFwd.setEmergencyCaller(_UNAUTHORIZED_CALLER);
@@ -87,10 +86,24 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
         assertEq(_emrgFwd.getEmergencyCaller(), _EMERGENCY_CALLER);
     }
 
+    function test_setEmergencyCaller_emits_the_EmergencyCallerSet_event() public {
+        _stopProtocolAdapter();
+
+        vm.expectEmit(address(_fwd));
+        emit IEmergencyMigratable.EmergencyCallerSet({emergencyCaller: _EMERGENCY_CALLER});
+        _setEmergencyCaller();
+    }
+
     function test_forwardEmergencyCall_reverts_if_the_pa_is_stopped_but_the_emergency_caller_is_not_set() public {
         _stopProtocolAdapter();
 
-        vm.expectRevert(EmergencyMigratableForwarderBase.EmergencyCallerNotSet.selector);
+        vm.prank(_UNAUTHORIZED_CALLER);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                IEmergencyMigratable.EmergencyCallerMismatch.selector, address(0), _UNAUTHORIZED_CALLER
+            ),
+            address(_emrgFwd)
+        );
         _emrgFwd.forwardEmergencyCall({input: _encodedDefaultInput(address(_tgt))});
     }
 
@@ -102,7 +115,10 @@ contract EmergencyMigratableForwarderBaseTest is ForwarderBaseTest {
 
         vm.prank(_UNAUTHORIZED_CALLER);
         vm.expectRevert(
-            abi.encodeWithSelector(ForwarderBase.UnauthorizedCaller.selector, _EMERGENCY_CALLER, _UNAUTHORIZED_CALLER)
+            abi.encodeWithSelector(
+                IEmergencyMigratable.EmergencyCallerMismatch.selector, _EMERGENCY_CALLER, _UNAUTHORIZED_CALLER
+            ),
+            address(_emrgFwd)
         );
         _emrgFwd.forwardEmergencyCall({input: _encodedDefaultInput(address(_tgt))});
     }

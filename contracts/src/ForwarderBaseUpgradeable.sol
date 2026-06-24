@@ -14,7 +14,8 @@ import {IProtocolAdapterSpecific} from "./interfaces/IProtocolAdapterSpecific.so
 
 /// @title ForwarderBaseUpgradeable
 /// @author Anoma Foundation, 2026
-/// @notice A base contract for protocol-adapter- and logic-reference-specific forwarders.
+/// @notice A UUPS upgradeable and ownable base contract for non-reentrant, protocol-adapter- and logic-reference-
+/// specific forwarders.
 /// @custom:security-contact security@anoma.foundation
 abstract contract ForwarderBaseUpgradeable is
     IForwarder,
@@ -39,10 +40,6 @@ abstract contract ForwarderBaseUpgradeable is
     bytes32 internal constant _FORWARDER_BASE_STORAGE_SLOT =
         0x2bd7b6d3e7cc22d7ab1bb9e579816e4511f108e9e5b105013ce0651501830c00;
 
-    error ZeroNotAllowed();
-    error UnauthorizedCaller(address expected, address actual);
-    error UnauthorizedLogicRef(bytes32 expected, bytes32 actual);
-
     /// @notice Disables the initializers on the implementation contract to prevent it from being left uninitialized.
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -54,9 +51,10 @@ abstract contract ForwarderBaseUpgradeable is
         ForwarderBaseStorage storage $ = _getForwarderBaseStorage();
 
         require(
-            msg.sender == $._protocolAdapter, UnauthorizedCaller({expected: $._protocolAdapter, actual: msg.sender})
+            msg.sender == $._protocolAdapter,
+            IProtocolAdapterSpecific.ProtocolAdapterMismatch({expected: $._protocolAdapter, actual: msg.sender})
         );
-        require($._logicRef == logicRef, UnauthorizedLogicRef({expected: $._logicRef, actual: logicRef}));
+        require($._logicRef == logicRef, ILogicRefSpecific.LogicRefMismatch({expected: $._logicRef, actual: logicRef}));
 
         output = _forwardCall(input);
     }
@@ -103,8 +101,8 @@ abstract contract ForwarderBaseUpgradeable is
         internal
         onlyInitializing
     {
-        require(protocolAdapter != address(0), ZeroNotAllowed());
-        require(logicRef != bytes32(0), ZeroNotAllowed());
+        require(protocolAdapter != address(0), ZeroProtocolAdapterNotAllowed());
+        require(logicRef != bytes32(0), ZeroLogicRefNotAllowed());
 
         ForwarderBaseStorage storage $ = _getForwarderBaseStorage();
 
