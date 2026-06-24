@@ -14,7 +14,8 @@ import {IProtocolAdapterSpecific} from "./interfaces/IProtocolAdapterSpecific.so
 
 /// @title ForwarderBaseUpgradeable
 /// @author Anoma Foundation, 2026
-/// @notice A base contract for protocol-adapter- and logic-reference-specific forwarders.
+/// @notice An UUPS upgradeable and ownable base contract for non-reentrant, protocol-adapter- and logic-reference-
+/// specific forwarders.
 /// @custom:security-contact security@anoma.foundation
 abstract contract ForwarderBaseUpgradeable is
     IForwarder,

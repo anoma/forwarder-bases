@@ -9,7 +9,7 @@ import {IProtocolAdapterSpecific} from "./interfaces/IProtocolAdapterSpecific.so
 
 /// @title ForwarderBase
 /// @author Anoma Foundation, 2026
-/// @notice A base contract for protocol-adapter- and logic-reference-specific forwarders.
+/// @notice A base contract for non-reentrant, protocol-adapter- and logic-reference-specific forwarders.
 /// @custom:security-contact security@anoma.foundation
 abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicRefSpecific, ReentrancyGuardTransient {
     /// @notice The protocol adapter contract that can forward calls.
@@ -26,8 +26,8 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
         _;
     }
 
-    /// @notice Ensures that the function call is triggered by a resource with the logic reference the forwarder is associated
-    /// with.
+    /// @notice Ensures that the function call is triggered by a resource with the logic reference the forwarder is
+    /// associated with.
     /// @param logicRef The logic reference of the resource triggering the forward call.
     modifier onlyLogicRef(bytes32 logicRef) {
         require(_LOGIC_REF == logicRef, LogicRefMismatch({expected: _LOGIC_REF, actual: logicRef}));
