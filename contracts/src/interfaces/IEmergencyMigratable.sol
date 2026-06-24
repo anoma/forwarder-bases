@@ -12,8 +12,8 @@ interface IEmergencyMigratable {
     /// @notice Thrown if the zero address is provided as the emergency committee during initialization.
     error ZeroEmergencyCommitteeNotAllowed();
 
-    /// @notice Thrown if the calling address mismatches the emergency committee this contract is specifically associated
-    /// with.
+    /// @notice Thrown if the calling address mismatches the emergency committee this contract is specifically
+    /// associated with.
     /// @param expected The expected emergency committee address.
     /// @param actual The actual emergency committee address.
     error EmergencyCommitteeMismatch(address expected, address actual);
@@ -37,7 +37,7 @@ interface IEmergencyMigratable {
     /// @return output The `bytes` encoded output of the call.
     function forwardEmergencyCall(bytes memory input) external returns (bytes memory output);
 
-    /// @notice Sets the emergency caller. This function can only be called once by the specified emegrency committee
+    /// @notice Sets the emergency caller. This function can only be called once by the specified emergency committee
     /// in the case the appropriate protocol adapter of RiscZero verifier has been stopped.
     /// @param emergencyCaller The emergency caller to set.
     function setEmergencyCaller(address emergencyCaller) external;
