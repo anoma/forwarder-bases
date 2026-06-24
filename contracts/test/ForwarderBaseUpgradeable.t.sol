@@ -18,7 +18,7 @@ import {ForwarderUpgradeableExample} from "./examples/ForwarderUpgradeableExampl
 import {ReentrantTargetExample} from "./examples/ReentrantTargetExample.sol";
 import {TestWithRoles} from "./helpers/TestWithRoles.sol";
 
-contract ForwarderBaseUpgradeableUpgradeableTest is TestWithRoles {
+contract ForwarderBaseUpgradeableTest is TestWithRoles {
     bytes32 internal constant _LOGIC_REF = bytes32(type(uint256).max);
 
     address internal _pa;
