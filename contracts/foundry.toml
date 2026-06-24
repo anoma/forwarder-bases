@@ -4,12 +4,12 @@ solc = "0.8.35"
 auto_detect_solc = false
 evm_version = "osaka"
 gas_reports = [
+    "EmergencyMigratableForwarderBase",
     "ForwarderBase",
     "ForwarderBaseUpgradeable",
-    "EmergencyMigratableForwarderBase", 
-    "NativeTokenReceiver", 
-    "TransientFallbackHandler", 
-    "Version"
+    "NativeTokenReceiver",
+    "SweepableNativeTokenReceiver",
+    "TransientFallbackHandler",
 ]
 optimizer = true
 via_ir = true

@@ -68,7 +68,7 @@ contracts-test *args:
 contracts-gen-bindings:
     cd contracts && forge clean && forge bind \
         --skip test \
-        --select '^(IForwarder|IVersion|IProtocolAdapterSpecific|ILogicRefSpecific|IImplementation|INativeTokenReceiver|IFallbackHandler|IEmergencyMigratable|ISweepable)$' \
+        --select '^(IEmergencyMigratable|IFallbackHandler|IForwarder|IImplementation|ILogicRefSpecific|INativeTokenReceiver|IProtocolAdapterSpecific|ISweepable|IVersion)$' \
         --bindings-path ../bindings/src/generated/ \
         --module \
         --overwrite
