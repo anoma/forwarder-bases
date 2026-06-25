@@ -44,6 +44,11 @@ contract SweepableNativeTokenReceiverTest is NativeTokenReceiverTest {
         assertEq(_receiver.balance, 0);
     }
 
+    function test_sweep_reverts_when_recipient_is_zero() public {
+        vm.expectRevert(ISweepable.ZeroRecipientNotAllowed.selector);
+        ISweepable(_receiver).sweep({token: address(0), to: address(0)});
+    }
+
     function test_sweep_is_a_noop_when_erc20_balance_is_zero() public {
         vm.expectEmit(_receiver);
         emit ISweepable.Swept({token: address(_erc20), to: _ALICE, amount: 0});

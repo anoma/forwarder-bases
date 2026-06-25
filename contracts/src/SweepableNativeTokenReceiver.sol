@@ -20,6 +20,8 @@ contract SweepableNativeTokenReceiver is ISweepable, NativeTokenReceiver {
     /// @inheritdoc ISweepable
     /// @dev This function is permissionless and can be called by everyone.
     function sweep(address token, address to) external override returns (uint256 amount) {
+        if (to == address(0)) revert ZeroRecipientNotAllowed();
+
         if (token == address(0)) {
             amount = address(this).balance;
             payable(to).sendValue(amount);
