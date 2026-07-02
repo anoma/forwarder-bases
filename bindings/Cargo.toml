@@ -1,6 +1,6 @@
 [package]
 name = "anoma-forwarder-bases-bindings"
-version = "1.0.0-rc.4"
+version = "1.0.0"
 description = "The bindings to forwarder base contracts and their interfaces."
 keywords.workspace = true
 authors.workspace = true
