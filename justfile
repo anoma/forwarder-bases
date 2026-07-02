@@ -73,8 +73,10 @@ contracts-gen-bindings:
         --module \
         --overwrite
 
-# Publish contracts
+# Publish contracts to soldeer. VERSION must be semver (e.g. 1.2.0).
+# Flags such as --dry-run go AFTER the version: `just contracts-publish 1.2.0 --dry-run`.
 contracts-publish version *args:
+    @[[ "{{version}}" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+ ]] || { echo "error: invalid version '{{version}}'. Expected semver like 1.2.0. Usage: just contracts-publish <version> [flags] (put --dry-run AFTER the version)." >&2; exit 1; }
     cd contracts && forge soldeer push anoma-forwarder-bases~{{version}} {{ args }}
 
 # --- Bindings ---
