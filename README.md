@@ -38,6 +38,16 @@ The [bindings](./bindings/) folder provides [Rust](https://www.rust-lang.org/) b
 
    [📄 Audit Report (pdf)](./audits/2025-12-19_Informal_Systems_AnomaPay_Phase_I.pdf)
 
+2. Informal Systems
+   - Company Website: https://informal.systems
+   - Commit
+     ID: [7237c83a1cc68fa4842a0d2e9eafa1cd129d93a1](https://github.com/anoma/forwarder-bases/tree/7237c83a1cc68fa4842a0d2e9eafa1cd129d93a1)
+   - Started: 2026-06-15
+   - Finished: 2026-06-19
+   - Last revised: 2026-07-03
+
+   [📄 Audit Report (pdf)](./audits/2026-07-03_Informal_Systems_Generic_Call_Resource_&_Forwarder.pdf)
+
 ## Security
 
 If you believe you've found a security issue, we encourage you to notify us via Email
