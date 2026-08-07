@@ -6,14 +6,14 @@ pragma solidity ^0.8.30;
 /// @notice Interface for contracts whose native or ERC-20 token balances can be swept to a recipient.
 /// @custom:security-contact security@anoma.foundation
 interface ISweepable {
-    /// @notice Thrown when the sweep recipient is the zero address.
-    error ZeroRecipientNotAllowed();
-
     /// @notice Emitted when tokens are swept from the contract.
     /// @param token The swept ERC-20 token, or the zero address for native tokens.
     /// @param to The recipient of the swept tokens.
     /// @param amount The swept amount.
     event Swept(address indexed token, address indexed to, uint256 amount);
+
+    /// @notice Thrown when the sweep recipient is the zero address.
+    error ZeroRecipientNotAllowed();
 
     /// @notice Sweeps the full balance of native or ERC-20 tokens held by this contract to a recipient.
     /// @param token The ERC-20 token to sweep, or the zero address to sweep native tokens.

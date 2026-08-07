@@ -32,7 +32,7 @@ contracts-lint:
 
 # Checks that the storage layout of contracts in `src` is empty.
 # `skip` is a space-separated list of contract names to ignore (non-upgradeable bases).
-contracts-storage-check *skip='EmergencyMigratableForwarderBase':
+contracts-storage-check *skip:
     #!/usr/bin/env bash
     set -euo pipefail
     cd contracts
@@ -68,7 +68,7 @@ contracts-test *args:
 contracts-gen-bindings:
     cd contracts && forge clean && forge bind \
         --skip test \
-        --select '^(IEmergencyMigratable|IFallbackHandler|IForwarder|IImplementation|ILogicRefSpecific|INativeTokenReceiver|IProtocolAdapterSpecific|ISweepable|IVersion)$' \
+        --select '^(IFallbackHandler|IForwarder|IImplementation|ILogicRefSpecific|INativeTokenReceiver|IProtocolAdapterSpecific|ISweepable|IVersion)$' \
         --bindings-path ../bindings/src/generated/ \
         --module \
         --overwrite

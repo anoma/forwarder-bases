@@ -91,7 +91,7 @@ To regenerate the Rust bindings (see the [forge bind](https://getfoundry.sh/forg
 ```sh
 forge clean && forge bind \
   --skip test \
-  --select '^(IForwarder|IVersion|IProtocolAdapterSpecific|ILogicRefSpecific|INativeTokenReceiver|IFallbackHandler|IEmergencyMigratable)$' \
+  --select '^(IForwarder|IVersion|IProtocolAdapterSpecific|ILogicRefSpecific|INativeTokenReceiver|IFallbackHandler)$' \
   --bindings-path ../bindings/src/generated/ \
   --module \
   --overwrite
