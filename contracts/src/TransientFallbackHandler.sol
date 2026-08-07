@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.30;
 
-import {SlotDerivation} from "@openzeppelin-contracts-5.6.1/utils/SlotDerivation.sol";
-import {TransientSlot} from "@openzeppelin-contracts-5.6.1/utils/TransientSlot.sol";
+import {SlotDerivation} from "@openzeppelin-contracts-5.7.0/utils/SlotDerivation.sol";
+import {TransientSlot} from "@openzeppelin-contracts-5.7.0/utils/TransientSlot.sol";
 
 import {IFallbackHandler} from "./interfaces/IFallbackHandler.sol";
 

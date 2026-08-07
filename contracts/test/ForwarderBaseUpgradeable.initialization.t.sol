@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-import {Initializable} from "@openzeppelin-contracts-5.6.1/proxy/utils/Initializable.sol";
-import {OwnableUpgradeable} from "@openzeppelin-contracts-upgradeable-5.6.1/access/OwnableUpgradeable.sol";
-import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.1/src/Upgrades.sol";
+import {Initializable} from "@openzeppelin-contracts-5.7.0/proxy/utils/Initializable.sol";
+import {OwnableUpgradeable} from "@openzeppelin-contracts-upgradeable-5.7.0/access/OwnableUpgradeable.sol";
+import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.2/src/Upgrades.sol";
 
 import {ILogicRefSpecific} from "../src/interfaces/ILogicRefSpecific.sol";
 import {IProtocolAdapterSpecific} from "../src/interfaces/IProtocolAdapterSpecific.sol";

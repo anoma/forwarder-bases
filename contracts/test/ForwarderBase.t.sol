@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.6.1/utils/ReentrancyGuardTransient.sol";
+import {ReentrancyGuardTransient} from "@openzeppelin-contracts-5.7.0/utils/ReentrancyGuardTransient.sol";
 
 import {ILogicRefSpecific} from "../src/interfaces/ILogicRefSpecific.sol";
 import {IProtocolAdapterSpecific} from "../src/interfaces/IProtocolAdapterSpecific.sol";
