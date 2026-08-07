@@ -4,7 +4,6 @@ solc = "0.8.35"
 auto_detect_solc = false
 evm_version = "osaka"
 gas_reports = [
-    "EmergencyMigratableForwarderBase",
     "ForwarderBase",
     "ForwarderBaseUpgradeable",
     "NativeTokenReceiver",

@@ -29,7 +29,7 @@ The [bindings](./bindings/) folder provides [Rust](https://www.rust-lang.org/) b
 
 1. Informal Systems
    - Company Website: https://informal.systems
-   - Contracts: [`ForwarderBase.sol`](./contracts/src/ForwarderBase.sol), [`EmergencyMigratableForwarderBase.sol`](./contracts/src/EmergencyMigratableForwarderBase.sol)
+   - Contracts: [`ForwarderBase.sol`](./contracts/src/ForwarderBase.sol), `EmergencyMigratableForwarderBase.sol` (since removed)
    - Repo: [anoma/anomapay-erc20-forwarder](https://github.com/anoma/anomapay-erc20-forwarder)
    - Commit ID: [03e60b64d9dc3845c55e34d1d0bef25392cb5b60](https://github.com/anoma/anomapay-erc20-forwarder/tree/03e60b64d9dc3845c55e34d1d0bef25392cb5b60)
    - Started: 2025-12-01
