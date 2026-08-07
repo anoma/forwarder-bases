@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-import {Test} from "forge-std-1.16.1/src/Test.sol";
+import {Test} from "forge-std-1.16.2/src/Test.sol";
 
 /// @title TestWithRoles
 /// @notice Base test contract exposing deterministic, labeled role addresses defined once for the whole suite.
