@@ -57,6 +57,8 @@ contract TransientFallbackHandler is IFallbackHandler {
 
     /// @inheritdoc IFallbackHandler
     function lookupMagicNumber(bytes4 selector) external view override returns (bytes4 magicNumber) {
+        // NOTE: `_registerSelector` stores a `bytes4` in the slot, so the cast loses no bytes.
+        // forge-lint: disable-next-item(unsafe-typecast)
         magicNumber = bytes4(
             _SELECTORS_TO_MAGIC_NUMBERS_TRANSIENT_STORAGE_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload()
         );
@@ -76,6 +78,8 @@ contract TransientFallbackHandler is IFallbackHandler {
     /// @param data The calldata.
     /// @return magicNumber The magic number registered for the function selector triggering the fallback.
     function _handleFallback(bytes4 selector, bytes calldata data) internal returns (bytes4 magicNumber) {
+        // NOTE: `_registerSelector` stores a `bytes4` in the slot, so the cast loses no bytes.
+        // forge-lint: disable-next-item(unsafe-typecast)
         magicNumber = bytes4(
             _SELECTORS_TO_MAGIC_NUMBERS_TRANSIENT_STORAGE_SLOT.deriveMapping(bytes32(selector)).asBytes32().tload()
         );

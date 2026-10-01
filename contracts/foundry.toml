@@ -43,6 +43,9 @@ ignored_warnings_from = [
     "dependencies/solady-0.1.26/src", # Warning 2424: Natspec memory-safe-assembly special comment for inline assembly is deprecated
 ]
 
+[lint]
+severity = ["high", "medium", "low", "info", "gas", "code-size"] # The default leaves out info, gas, and code-size.
+
 [dependencies]
 "@openzeppelin-contracts" = "5.7.0"
 "@openzeppelin-contracts-upgradeable" = "5.7.0"
