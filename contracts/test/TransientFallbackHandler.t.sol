@@ -10,6 +10,8 @@ import {TransientFallbackHandler} from "../src/TransientFallbackHandler.sol";
 import {ERC1155Example} from "./examples/ERC1155Example.sol";
 import {ERC721Example} from "./examples/ERC721Example.sol";
 
+/// @dev The registrations are transient, so each test runs as one transaction, as a forwarder call does.
+/// forge-config: default.isolate = false
 contract TransientFallbackHandlerTest is Test {
     bytes4 internal constant _UNREGISTERED = bytes4(0);
 
