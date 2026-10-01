@@ -222,23 +222,36 @@ function forwardCall(bytes32 logicRef, bytes memory input) external returns (byt
                     })
             }
             #[inline]
-            fn abi_decode_returns_validate(
+            fn abi_decode_returns_with_config(
                 data: &[u8],
+                config: alloy_sol_types::abi::AbiDecoderConfig,
             ) -> alloy_sol_types::Result<Self::Return> {
                 <Self::ReturnTuple<
                     '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence_validate(data)
+                > as alloy_sol_types::SolType>::abi_decode_sequence_with_config(
+                        data,
+                        config,
+                    )
                     .map(|r| {
                         let r: forwardCallReturn = r.into();
                         r.output
                     })
+            }
+            #[inline]
+            fn abi_decode_returns_validate(
+                data: &[u8],
+            ) -> alloy_sol_types::Result<Self::Return> {
+                Self::abi_decode_returns_with_config(
+                    data,
+                    alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+                )
             }
         }
     };
     ///Container for all the [`IForwarder`](self) function calls.
     #[derive(Clone)]
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[derive()]
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IForwarderCalls {
         #[allow(missing_docs)]
         forwardCall(forwardCallCall),
@@ -307,15 +320,31 @@ function forwardCall(bytes32 logicRef, bytes memory input) external returns (byt
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::default(),
+            )
+        }
+        #[inline]
+        #[allow(non_snake_case)]
+        fn abi_decode_raw_with_config(
+            selector: [u8; 4],
+            data: &[u8],
+            config: alloy_sol_types::abi::AbiDecoderConfig,
+        ) -> alloy_sol_types::Result<Self> {
             static DECODE_SHIMS: &[fn(
                 &[u8],
+                alloy_sol_types::abi::AbiDecoderConfig,
             ) -> alloy_sol_types::Result<IForwarderCalls>] = &[
                 {
                     fn forwardCall(
                         data: &[u8],
+                        config: alloy_sol_types::abi::AbiDecoderConfig,
                     ) -> alloy_sol_types::Result<IForwarderCalls> {
-                        <forwardCallCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                        <forwardCallCall as alloy_sol_types::SolCall>::abi_decode_raw_with_config(
                                 data,
+                                config,
                             )
                             .map(IForwarderCalls::forwardCall)
                     }
@@ -330,7 +359,7 @@ function forwardCall(bytes32 logicRef, bytes memory input) external returns (byt
                     ),
                 );
             };
-            DECODE_SHIMS[idx](data)
+            DECODE_SHIMS[idx](data, config)
         }
         #[inline]
         #[allow(non_snake_case)]
@@ -338,30 +367,11 @@ function forwardCall(bytes32 logicRef, bytes memory input) external returns (byt
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_VALIDATE_SHIMS: &[fn(
-                &[u8],
-            ) -> alloy_sol_types::Result<IForwarderCalls>] = &[
-                {
-                    fn forwardCall(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<IForwarderCalls> {
-                        <forwardCallCall as alloy_sol_types::SolCall>::abi_decode_raw_validate(
-                                data,
-                            )
-                            .map(IForwarderCalls::forwardCall)
-                    }
-                    forwardCall
-                },
-            ];
-            let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
-            };
-            DECODE_VALIDATE_SHIMS[idx](data)
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+            )
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

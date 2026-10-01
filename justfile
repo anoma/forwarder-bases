@@ -66,8 +66,10 @@ contracts-test *args:
 
 # Regenerate Rust bindings from contracts
 contracts-gen-bindings:
-    cd contracts && forge clean && forge bind \
-        --skip test \
+    # `forge bind` builds without bytecode, which drops the bytecode constants, so
+    # build first and let it read those artifacts.
+    cd contracts && forge clean && forge build --skip test && forge bind \
+        --skip-build \
         --select '^(IFallbackHandler|IForwarder|IImplementation|ILogicRefSpecific|INativeTokenReceiver|IProtocolAdapterSpecific|ISweepable|IVersion)$' \
         --bindings-path ../bindings/src/generated/ \
         --module \

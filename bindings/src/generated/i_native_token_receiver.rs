@@ -242,17 +242,41 @@ event NativeTokenReceived(address indexed sender, uint256 amount);
             topics: &[alloy_sol_types::Word],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
+            <Self as alloy_sol_types::SolEventInterface>::decode_raw_log_with_config(
+                topics,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::default(),
+            )
+        }
+        fn decode_raw_log_with_config(
+            topics: &[alloy_sol_types::Word],
+            data: &[u8],
+            config: alloy_sol_types::abi::AbiDecoderConfig,
+        ) -> alloy_sol_types::Result<Self> {
             match topics.first().copied() {
                 Some(
                     <NativeTokenReceived as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
                 ) => {
-                    <NativeTokenReceived as alloy_sol_types::SolEvent>::decode_raw_log(
+                    <NativeTokenReceived as alloy_sol_types::SolEvent>::decode_raw_log_with_config(
                             topics,
                             data,
+                            config,
                         )
                         .map(Self::NativeTokenReceived)
                 }
                 _ => {
+                    if topics
+                        .len()
+                        .checked_mul(alloy_sol_types::Word::len_bytes())
+                        .and_then(|len| len.checked_add(data.len()))
+                        .is_none_or(|len| len > config.get_memory_limit())
+                    {
+                        return alloy_sol_types::private::Err(
+                            alloy_sol_types::Error::MemoryLimitExceeded(
+                                config.get_memory_limit(),
+                            ),
+                        );
+                    }
                     alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
                         name: <Self as alloy_sol_types::SolEventInterface>::NAME,
                         log: alloy_sol_types::private::Box::new(
@@ -281,6 +305,24 @@ event NativeTokenReceived(address indexed sender, uint256 amount);
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
             }
+        }
+    }
+    #[automatically_derived]
+    impl INativeTokenReceiverEvents {
+        /**Creates a [`NativeTokenReceived`] event.
+
+```solidity
+event NativeTokenReceived(address,uint256)
+```*/
+        #[inline]
+        pub fn native_token_received(
+            sender: alloy::sol_types::private::Address,
+            amount: alloy::sol_types::private::primitives::aliases::U256,
+        ) -> Self {
+            Self::NativeTokenReceived(NativeTokenReceived {
+                sender: sender,
+                amount: amount,
+            })
         }
     }
     use alloy::contract as alloy_contract;

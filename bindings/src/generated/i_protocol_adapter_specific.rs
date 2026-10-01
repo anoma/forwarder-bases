@@ -167,10 +167,10 @@ error ProtocolAdapterMismatch(address expected, address actual);
             }
             #[inline]
             fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
-                <Self::Parameters<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence_validate(data)
-                    .map(Self::new)
+                Self::abi_decode_raw_with_config(
+                    data,
+                    alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+                )
             }
         }
     };
@@ -243,10 +243,10 @@ error ZeroProtocolAdapterNotAllowed();
             }
             #[inline]
             fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
-                <Self::Parameters<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence_validate(data)
-                    .map(Self::new)
+                Self::abi_decode_raw_with_config(
+                    data,
+                    alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+                )
             }
         }
     };
@@ -386,23 +386,36 @@ function getProtocolAdapter() external view returns (address protocolAdapter);
                     })
             }
             #[inline]
-            fn abi_decode_returns_validate(
+            fn abi_decode_returns_with_config(
                 data: &[u8],
+                config: alloy_sol_types::abi::AbiDecoderConfig,
             ) -> alloy_sol_types::Result<Self::Return> {
                 <Self::ReturnTuple<
                     '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence_validate(data)
+                > as alloy_sol_types::SolType>::abi_decode_sequence_with_config(
+                        data,
+                        config,
+                    )
                     .map(|r| {
                         let r: getProtocolAdapterReturn = r.into();
                         r.protocolAdapter
                     })
+            }
+            #[inline]
+            fn abi_decode_returns_validate(
+                data: &[u8],
+            ) -> alloy_sol_types::Result<Self::Return> {
+                Self::abi_decode_returns_with_config(
+                    data,
+                    alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+                )
             }
         }
     };
     ///Container for all the [`IProtocolAdapterSpecific`](self) function calls.
     #[derive(Clone)]
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[derive()]
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IProtocolAdapterSpecificCalls {
         #[allow(missing_docs)]
         getProtocolAdapter(getProtocolAdapterCall),
@@ -471,15 +484,31 @@ function getProtocolAdapter() external view returns (address protocolAdapter);
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::default(),
+            )
+        }
+        #[inline]
+        #[allow(non_snake_case)]
+        fn abi_decode_raw_with_config(
+            selector: [u8; 4],
+            data: &[u8],
+            config: alloy_sol_types::abi::AbiDecoderConfig,
+        ) -> alloy_sol_types::Result<Self> {
             static DECODE_SHIMS: &[fn(
                 &[u8],
+                alloy_sol_types::abi::AbiDecoderConfig,
             ) -> alloy_sol_types::Result<IProtocolAdapterSpecificCalls>] = &[
                 {
                     fn getProtocolAdapter(
                         data: &[u8],
+                        config: alloy_sol_types::abi::AbiDecoderConfig,
                     ) -> alloy_sol_types::Result<IProtocolAdapterSpecificCalls> {
-                        <getProtocolAdapterCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                        <getProtocolAdapterCall as alloy_sol_types::SolCall>::abi_decode_raw_with_config(
                                 data,
+                                config,
                             )
                             .map(IProtocolAdapterSpecificCalls::getProtocolAdapter)
                     }
@@ -494,7 +523,7 @@ function getProtocolAdapter() external view returns (address protocolAdapter);
                     ),
                 );
             };
-            DECODE_SHIMS[idx](data)
+            DECODE_SHIMS[idx](data, config)
         }
         #[inline]
         #[allow(non_snake_case)]
@@ -502,30 +531,11 @@ function getProtocolAdapter() external view returns (address protocolAdapter);
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_VALIDATE_SHIMS: &[fn(
-                &[u8],
-            ) -> alloy_sol_types::Result<IProtocolAdapterSpecificCalls>] = &[
-                {
-                    fn getProtocolAdapter(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<IProtocolAdapterSpecificCalls> {
-                        <getProtocolAdapterCall as alloy_sol_types::SolCall>::abi_decode_raw_validate(
-                                data,
-                            )
-                            .map(IProtocolAdapterSpecificCalls::getProtocolAdapter)
-                    }
-                    getProtocolAdapter
-                },
-            ];
-            let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
-            };
-            DECODE_VALIDATE_SHIMS[idx](data)
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+            )
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
@@ -631,15 +641,31 @@ function getProtocolAdapter() external view returns (address protocolAdapter);
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::default(),
+            )
+        }
+        #[inline]
+        #[allow(non_snake_case)]
+        fn abi_decode_raw_with_config(
+            selector: [u8; 4],
+            data: &[u8],
+            config: alloy_sol_types::abi::AbiDecoderConfig,
+        ) -> alloy_sol_types::Result<Self> {
             static DECODE_SHIMS: &[fn(
                 &[u8],
+                alloy_sol_types::abi::AbiDecoderConfig,
             ) -> alloy_sol_types::Result<IProtocolAdapterSpecificErrors>] = &[
                 {
                     fn ProtocolAdapterMismatch(
                         data: &[u8],
+                        config: alloy_sol_types::abi::AbiDecoderConfig,
                     ) -> alloy_sol_types::Result<IProtocolAdapterSpecificErrors> {
-                        <ProtocolAdapterMismatch as alloy_sol_types::SolError>::abi_decode_raw(
+                        <ProtocolAdapterMismatch as alloy_sol_types::SolError>::abi_decode_raw_with_config(
                                 data,
+                                config,
                             )
                             .map(IProtocolAdapterSpecificErrors::ProtocolAdapterMismatch)
                     }
@@ -648,9 +674,11 @@ function getProtocolAdapter() external view returns (address protocolAdapter);
                 {
                     fn ZeroProtocolAdapterNotAllowed(
                         data: &[u8],
+                        config: alloy_sol_types::abi::AbiDecoderConfig,
                     ) -> alloy_sol_types::Result<IProtocolAdapterSpecificErrors> {
-                        <ZeroProtocolAdapterNotAllowed as alloy_sol_types::SolError>::abi_decode_raw(
+                        <ZeroProtocolAdapterNotAllowed as alloy_sol_types::SolError>::abi_decode_raw_with_config(
                                 data,
+                                config,
                             )
                             .map(
                                 IProtocolAdapterSpecificErrors::ZeroProtocolAdapterNotAllowed,
@@ -667,7 +695,7 @@ function getProtocolAdapter() external view returns (address protocolAdapter);
                     ),
                 );
             };
-            DECODE_SHIMS[idx](data)
+            DECODE_SHIMS[idx](data, config)
         }
         #[inline]
         #[allow(non_snake_case)]
@@ -675,43 +703,11 @@ function getProtocolAdapter() external view returns (address protocolAdapter);
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_VALIDATE_SHIMS: &[fn(
-                &[u8],
-            ) -> alloy_sol_types::Result<IProtocolAdapterSpecificErrors>] = &[
-                {
-                    fn ProtocolAdapterMismatch(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<IProtocolAdapterSpecificErrors> {
-                        <ProtocolAdapterMismatch as alloy_sol_types::SolError>::abi_decode_raw_validate(
-                                data,
-                            )
-                            .map(IProtocolAdapterSpecificErrors::ProtocolAdapterMismatch)
-                    }
-                    ProtocolAdapterMismatch
-                },
-                {
-                    fn ZeroProtocolAdapterNotAllowed(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<IProtocolAdapterSpecificErrors> {
-                        <ZeroProtocolAdapterNotAllowed as alloy_sol_types::SolError>::abi_decode_raw_validate(
-                                data,
-                            )
-                            .map(
-                                IProtocolAdapterSpecificErrors::ZeroProtocolAdapterNotAllowed,
-                            )
-                    }
-                    ZeroProtocolAdapterNotAllowed
-                },
-            ];
-            let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
-            };
-            DECODE_VALIDATE_SHIMS[idx](data)
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+            )
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
@@ -744,6 +740,33 @@ function getProtocolAdapter() external view returns (address protocolAdapter);
                     )
                 }
             }
+        }
+    }
+    #[automatically_derived]
+    impl IProtocolAdapterSpecificErrors {
+        /**Creates a [`ProtocolAdapterMismatch`] error.
+
+```solidity
+error ProtocolAdapterMismatch(address,address)
+```*/
+        #[inline]
+        pub fn protocol_adapter_mismatch(
+            expected: alloy::sol_types::private::Address,
+            actual: alloy::sol_types::private::Address,
+        ) -> Self {
+            Self::ProtocolAdapterMismatch(ProtocolAdapterMismatch {
+                expected: expected,
+                actual: actual,
+            })
+        }
+        /**Creates a [`ZeroProtocolAdapterNotAllowed`] error.
+
+```solidity
+error ZeroProtocolAdapterNotAllowed()
+```*/
+        #[inline]
+        pub fn zero_protocol_adapter_not_allowed() -> Self {
+            Self::ZeroProtocolAdapterNotAllowed(ZeroProtocolAdapterNotAllowed)
         }
     }
     use alloy::contract as alloy_contract;
