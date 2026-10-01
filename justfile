@@ -15,6 +15,10 @@ contracts-deps:
 contracts-deps-clean:
     cd contracts && forge soldeer clean
 
+# Install the contract tooling (solhint) from the lockfile
+contracts-tooling:
+    cd contracts && bun install --frozen-lockfile
+
 # Clean contracts
 contracts-clean:
     cd contracts && forge clean
@@ -23,12 +27,11 @@ contracts-clean:
 contracts-build *args:
     cd contracts && forge build {{ args }}
 
-# Lint contracts (forge lint + solhint)
+# Lint contracts: forge lint, then solhint for the rules that forge lint lacks
 contracts-lint:
-    cd contracts && forge lint --deny warnings
-    cd contracts && bunx --bun solhint --config .solhint.json 'src/**/*.sol'
-    cd contracts && bunx --bun solhint --config .solhint.other.json 'test/**/*.sol'
-
+    cd contracts && forge lint --deny notes --report-unused-suppressions
+    cd contracts && bunx --bun solhint --max-warnings 0 --config .solhint.json 'src/**/*.sol'
+    cd contracts && bunx --bun solhint --max-warnings 0 --config .solhint.other.json 'test/**/*.sol'
 
 # Checks that the storage layout of contracts in `src` is empty.
 # `skip` is a space-separated list of contract names to ignore (non-upgradeable bases).
@@ -66,8 +69,10 @@ contracts-test *args:
 
 # Regenerate Rust bindings from contracts
 contracts-gen-bindings:
-    cd contracts && forge clean && forge bind \
-        --skip test \
+    # `forge bind` builds without bytecode, which drops the bytecode constants, so
+    # build first and let it read those artifacts.
+    cd contracts && forge clean && forge build --skip test && forge bind \
+        --skip-build \
         --select '^(IFallbackHandler|IForwarder|IImplementation|ILogicRefSpecific|INativeTokenReceiver|IProtocolAdapterSpecific|ISweepable|IVersion)$' \
         --bindings-path ../bindings/src/generated/ \
         --module \

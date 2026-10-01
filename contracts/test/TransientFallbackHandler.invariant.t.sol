@@ -2,7 +2,7 @@
 pragma solidity ^0.8.30;
 
 import {SlotDerivation} from "@openzeppelin-contracts-5.7.0/utils/SlotDerivation.sol";
-import {Test} from "forge-std-1.16.2/src/Test.sol";
+import {Test} from "forge-std-1.17.0/src/Test.sol";
 
 import {TransientFallbackHandler} from "../src/TransientFallbackHandler.sol";
 
@@ -65,7 +65,8 @@ contract TransientFallbackHandlerInvariantTest is Test {
     /// @notice The contract must only ever use transient storage — the persistent storage slot derived for any probed
     /// selector must always read as zero, even after registrations in previous transactions.
     function invariant_persistent_storage_at_the_transient_slot_is_never_written() public view {
-        bytes32 derivedSlot = "anoma.transient.selectorsToMagicNumbers".erc7201Slot()
+        bytes32 derivedSlot = "anoma.transient.selectorsToMagicNumbers"
+            .erc7201Slot()
             .deriveMapping(bytes32(_registerer.PROBE_SELECTOR()));
         assertEq(
             vm.load(address(_handler), derivedSlot),

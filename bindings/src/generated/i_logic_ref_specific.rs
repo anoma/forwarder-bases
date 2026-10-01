@@ -167,10 +167,10 @@ error LogicRefMismatch(bytes32 expected, bytes32 actual);
             }
             #[inline]
             fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
-                <Self::Parameters<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence_validate(data)
-                    .map(Self::new)
+                Self::abi_decode_raw_with_config(
+                    data,
+                    alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+                )
             }
         }
     };
@@ -241,10 +241,10 @@ error ZeroLogicRefNotAllowed();
             }
             #[inline]
             fn abi_decode_raw_validate(data: &[u8]) -> alloy_sol_types::Result<Self> {
-                <Self::Parameters<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence_validate(data)
-                    .map(Self::new)
+                Self::abi_decode_raw_with_config(
+                    data,
+                    alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+                )
             }
         }
     };
@@ -380,23 +380,36 @@ function getLogicRef() external view returns (bytes32 logicRef);
                     })
             }
             #[inline]
-            fn abi_decode_returns_validate(
+            fn abi_decode_returns_with_config(
                 data: &[u8],
+                config: alloy_sol_types::abi::AbiDecoderConfig,
             ) -> alloy_sol_types::Result<Self::Return> {
                 <Self::ReturnTuple<
                     '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence_validate(data)
+                > as alloy_sol_types::SolType>::abi_decode_sequence_with_config(
+                        data,
+                        config,
+                    )
                     .map(|r| {
                         let r: getLogicRefReturn = r.into();
                         r.logicRef
                     })
+            }
+            #[inline]
+            fn abi_decode_returns_validate(
+                data: &[u8],
+            ) -> alloy_sol_types::Result<Self::Return> {
+                Self::abi_decode_returns_with_config(
+                    data,
+                    alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+                )
             }
         }
     };
     ///Container for all the [`ILogicRefSpecific`](self) function calls.
     #[derive(Clone)]
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[derive()]
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum ILogicRefSpecificCalls {
         #[allow(missing_docs)]
         getLogicRef(getLogicRefCall),
@@ -465,15 +478,31 @@ function getLogicRef() external view returns (bytes32 logicRef);
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::default(),
+            )
+        }
+        #[inline]
+        #[allow(non_snake_case)]
+        fn abi_decode_raw_with_config(
+            selector: [u8; 4],
+            data: &[u8],
+            config: alloy_sol_types::abi::AbiDecoderConfig,
+        ) -> alloy_sol_types::Result<Self> {
             static DECODE_SHIMS: &[fn(
                 &[u8],
+                alloy_sol_types::abi::AbiDecoderConfig,
             ) -> alloy_sol_types::Result<ILogicRefSpecificCalls>] = &[
                 {
                     fn getLogicRef(
                         data: &[u8],
+                        config: alloy_sol_types::abi::AbiDecoderConfig,
                     ) -> alloy_sol_types::Result<ILogicRefSpecificCalls> {
-                        <getLogicRefCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                        <getLogicRefCall as alloy_sol_types::SolCall>::abi_decode_raw_with_config(
                                 data,
+                                config,
                             )
                             .map(ILogicRefSpecificCalls::getLogicRef)
                     }
@@ -488,7 +517,7 @@ function getLogicRef() external view returns (bytes32 logicRef);
                     ),
                 );
             };
-            DECODE_SHIMS[idx](data)
+            DECODE_SHIMS[idx](data, config)
         }
         #[inline]
         #[allow(non_snake_case)]
@@ -496,30 +525,11 @@ function getLogicRef() external view returns (bytes32 logicRef);
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_VALIDATE_SHIMS: &[fn(
-                &[u8],
-            ) -> alloy_sol_types::Result<ILogicRefSpecificCalls>] = &[
-                {
-                    fn getLogicRef(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<ILogicRefSpecificCalls> {
-                        <getLogicRefCall as alloy_sol_types::SolCall>::abi_decode_raw_validate(
-                                data,
-                            )
-                            .map(ILogicRefSpecificCalls::getLogicRef)
-                    }
-                    getLogicRef
-                },
-            ];
-            let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
-            };
-            DECODE_VALIDATE_SHIMS[idx](data)
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+            )
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
@@ -625,15 +635,31 @@ function getLogicRef() external view returns (bytes32 logicRef);
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::default(),
+            )
+        }
+        #[inline]
+        #[allow(non_snake_case)]
+        fn abi_decode_raw_with_config(
+            selector: [u8; 4],
+            data: &[u8],
+            config: alloy_sol_types::abi::AbiDecoderConfig,
+        ) -> alloy_sol_types::Result<Self> {
             static DECODE_SHIMS: &[fn(
                 &[u8],
+                alloy_sol_types::abi::AbiDecoderConfig,
             ) -> alloy_sol_types::Result<ILogicRefSpecificErrors>] = &[
                 {
                     fn LogicRefMismatch(
                         data: &[u8],
+                        config: alloy_sol_types::abi::AbiDecoderConfig,
                     ) -> alloy_sol_types::Result<ILogicRefSpecificErrors> {
-                        <LogicRefMismatch as alloy_sol_types::SolError>::abi_decode_raw(
+                        <LogicRefMismatch as alloy_sol_types::SolError>::abi_decode_raw_with_config(
                                 data,
+                                config,
                             )
                             .map(ILogicRefSpecificErrors::LogicRefMismatch)
                     }
@@ -642,9 +668,11 @@ function getLogicRef() external view returns (bytes32 logicRef);
                 {
                     fn ZeroLogicRefNotAllowed(
                         data: &[u8],
+                        config: alloy_sol_types::abi::AbiDecoderConfig,
                     ) -> alloy_sol_types::Result<ILogicRefSpecificErrors> {
-                        <ZeroLogicRefNotAllowed as alloy_sol_types::SolError>::abi_decode_raw(
+                        <ZeroLogicRefNotAllowed as alloy_sol_types::SolError>::abi_decode_raw_with_config(
                                 data,
+                                config,
                             )
                             .map(ILogicRefSpecificErrors::ZeroLogicRefNotAllowed)
                     }
@@ -659,7 +687,7 @@ function getLogicRef() external view returns (bytes32 logicRef);
                     ),
                 );
             };
-            DECODE_SHIMS[idx](data)
+            DECODE_SHIMS[idx](data, config)
         }
         #[inline]
         #[allow(non_snake_case)]
@@ -667,41 +695,11 @@ function getLogicRef() external view returns (bytes32 logicRef);
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_VALIDATE_SHIMS: &[fn(
-                &[u8],
-            ) -> alloy_sol_types::Result<ILogicRefSpecificErrors>] = &[
-                {
-                    fn LogicRefMismatch(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<ILogicRefSpecificErrors> {
-                        <LogicRefMismatch as alloy_sol_types::SolError>::abi_decode_raw_validate(
-                                data,
-                            )
-                            .map(ILogicRefSpecificErrors::LogicRefMismatch)
-                    }
-                    LogicRefMismatch
-                },
-                {
-                    fn ZeroLogicRefNotAllowed(
-                        data: &[u8],
-                    ) -> alloy_sol_types::Result<ILogicRefSpecificErrors> {
-                        <ZeroLogicRefNotAllowed as alloy_sol_types::SolError>::abi_decode_raw_validate(
-                                data,
-                            )
-                            .map(ILogicRefSpecificErrors::ZeroLogicRefNotAllowed)
-                    }
-                    ZeroLogicRefNotAllowed
-                },
-            ];
-            let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
-            };
-            DECODE_VALIDATE_SHIMS[idx](data)
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+            )
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
@@ -734,6 +732,33 @@ function getLogicRef() external view returns (bytes32 logicRef);
                     )
                 }
             }
+        }
+    }
+    #[automatically_derived]
+    impl ILogicRefSpecificErrors {
+        /**Creates a [`LogicRefMismatch`] error.
+
+```solidity
+error LogicRefMismatch(bytes32,bytes32)
+```*/
+        #[inline]
+        pub fn logic_ref_mismatch(
+            expected: alloy::sol_types::private::FixedBytes<32>,
+            actual: alloy::sol_types::private::FixedBytes<32>,
+        ) -> Self {
+            Self::LogicRefMismatch(LogicRefMismatch {
+                expected: expected,
+                actual: actual,
+            })
+        }
+        /**Creates a [`ZeroLogicRefNotAllowed`] error.
+
+```solidity
+error ZeroLogicRefNotAllowed()
+```*/
+        #[inline]
+        pub fn zero_logic_ref_not_allowed() -> Self {
+            Self::ZeroLogicRefNotAllowed(ZeroLogicRefNotAllowed)
         }
     }
     use alloy::contract as alloy_contract;

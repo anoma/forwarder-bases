@@ -19,6 +19,8 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
     bytes32 internal immutable _LOGIC_REF;
 
     /// @notice Ensures that the protocol adapter is the function caller.
+    // NOTE: Inheriting forwarders can apply the modifier too, and with one use, wrapping saves no code size.
+    // forge-lint: disable-next-item(modifier-used-only-once,unwrapped-modifier-logic)
     modifier onlyProtocolAdapter() {
         require(
             msg.sender == _PROTOCOL_ADAPTER, ProtocolAdapterMismatch({expected: _PROTOCOL_ADAPTER, actual: msg.sender})
@@ -29,6 +31,8 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
     /// @notice Ensures that the function call is triggered by a resource with the logic reference the forwarder is
     /// associated with.
     /// @param logicRef The logic reference of the resource triggering the forward call.
+    // NOTE: Inheriting forwarders can apply the modifier too, and with one use, wrapping saves no code size.
+    // forge-lint: disable-next-item(modifier-used-only-once,unwrapped-modifier-logic)
     modifier onlyLogicRef(bytes32 logicRef) {
         require(_LOGIC_REF == logicRef, LogicRefMismatch({expected: _LOGIC_REF, actual: logicRef}));
         _;

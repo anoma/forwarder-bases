@@ -6,19 +6,24 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   tests:
     name: Bindings Tests
     runs-on: macos-latest
-    env:
-      ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install just
-        uses: extractions/setup-just@v3
+        uses: extractions/setup-just@v4
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -27,12 +32,6 @@ jobs:
 
       - name: Show Rust version
         run: rustc --version
-
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-
-      - name: Show Foundry version
-        run: forge --version
 
       - name: Rust cache
         uses: Swatinem/rust-cache@v2

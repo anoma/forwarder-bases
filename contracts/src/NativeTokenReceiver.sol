@@ -3,13 +3,14 @@ pragma solidity ^0.8.30;
 
 import {INativeTokenReceiver} from "./interfaces/INativeTokenReceiver.sol";
 
+// NOTE: The inheriting contract needs to implement a method allowing to withdraw the native tokens.
+// forge-lint: disable-next-item(locked-ether)
 /// @title NativeTokenReceiver
 /// @author Anoma Foundation, 2026
 /// @notice A base contract receiving native tokens.
 /// @dev The inheriting contract has to implement a method allowing to withdraw the native tokens.
 /// @custom:security-contact security@anoma.foundation
 contract NativeTokenReceiver is INativeTokenReceiver {
-    // NOTE: The inheriting contract needs to implement a method allowing to withdraw the native tokens.
     // slither-disable-start locked-ether
 
     /// @notice Emits the `NativeTokenReceived` event to track native token deposits.

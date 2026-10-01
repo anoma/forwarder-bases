@@ -1,6 +1,6 @@
 # Full reference https://github.com/foundry-rs/foundry/tree/master/crates/config
 [profile.default]
-solc = "0.8.36"
+solc = "0.8.37"
 auto_detect_solc = false
 evm_version = "osaka"
 gas_reports = [
@@ -34,8 +34,8 @@ remappings = [
     "@openzeppelin-contracts-5.7.0/=dependencies/@openzeppelin-contracts-5.7.0/",
     "@openzeppelin-contracts-upgradeable-5.7.0/=dependencies/@openzeppelin-contracts-upgradeable-5.7.0/",
     "@openzeppelin/contracts/=dependencies/@openzeppelin-contracts-5.7.0/",
-    "forge-std-1.16.2/=dependencies/forge-std-1.16.2/",
-    "forge-std/=dependencies/forge-std-1.16.2/src/",
+    "forge-std-1.17.0/=dependencies/forge-std-1.17.0/",
+    "forge-std/=dependencies/forge-std-1.17.0/src/",
     "openzeppelin-foundry-upgrades-0.4.2/=dependencies/openzeppelin-foundry-upgrades-0.4.2/",
     "solady-0.1.26/=dependencies/solady-0.1.26/",
 ]
@@ -43,10 +43,13 @@ ignored_warnings_from = [
     "dependencies/solady-0.1.26/src", # Warning 2424: Natspec memory-safe-assembly special comment for inline assembly is deprecated
 ]
 
+[lint]
+severity = ["high", "medium", "low", "info", "gas", "code-size"] # The default leaves out info, gas, and code-size.
+
 [dependencies]
 "@openzeppelin-contracts" = "5.7.0"
 "@openzeppelin-contracts-upgradeable" = "5.7.0"
-"forge-std" = "1.16.2"
+"forge-std" = "1.17.0"
 "solady" = "0.1.26"
 "openzeppelin-foundry-upgrades" = "0.4.2"
 
