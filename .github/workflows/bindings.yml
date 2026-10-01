@@ -10,8 +10,6 @@ jobs:
   tests:
     name: Bindings Tests
     runs-on: macos-latest
-    env:
-      ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
 
     steps:
       - name: Checkout repository
@@ -27,12 +25,6 @@ jobs:
 
       - name: Show Rust version
         run: rustc --version
-
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-
-      - name: Show Foundry version
-        run: forge --version
 
       - name: Rust cache
         uses: Swatinem/rust-cache@v2
