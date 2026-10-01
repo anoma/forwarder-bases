@@ -66,7 +66,8 @@ contract TransientFallbackHandler is IFallbackHandler {
     /// @param selector The selector of the callback function.
     /// @param magicNumber The magic number to be registered for the callback function selector.
     function _registerSelector(bytes4 selector, bytes4 magicNumber) internal {
-        _SELECTORS_TO_MAGIC_NUMBERS_TRANSIENT_STORAGE_SLOT.deriveMapping(bytes32(selector)).asBytes32()
+        _SELECTORS_TO_MAGIC_NUMBERS_TRANSIENT_STORAGE_SLOT.deriveMapping(bytes32(selector))
+            .asBytes32()
             .tstore(bytes32(magicNumber));
     }
 
