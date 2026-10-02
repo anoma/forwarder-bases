@@ -3,13 +3,15 @@ pragma solidity ^0.8.30;
 
 import {IERC1155Receiver} from "@openzeppelin-contracts-5.7.0/token/ERC1155/IERC1155Receiver.sol";
 import {IERC721Receiver} from "@openzeppelin-contracts-5.7.0/token/ERC721/IERC721Receiver.sol";
-import {Test} from "forge-std-1.16.2/src/Test.sol";
+import {Test} from "forge-std-1.17.0/src/Test.sol";
 
 import {IFallbackHandler} from "../src/interfaces/IFallbackHandler.sol";
 import {TransientFallbackHandler} from "../src/TransientFallbackHandler.sol";
 import {ERC1155Example} from "./examples/ERC1155Example.sol";
 import {ERC721Example} from "./examples/ERC721Example.sol";
 
+/// @dev The registrations are transient, so each test runs as one transaction, as a forwarder call does.
+/// forge-config: default.isolate = false
 contract TransientFallbackHandlerTest is Test {
     bytes4 internal constant _UNREGISTERED = bytes4(0);
 

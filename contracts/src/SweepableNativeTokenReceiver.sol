@@ -26,6 +26,8 @@ contract SweepableNativeTokenReceiver is ISweepable, NativeTokenReceiver {
 
         if (token == address(0)) {
             amount = address(this).balance;
+            // NOTE: The sweep is permissionless by design, so any caller can pick the recipient.
+            // forge-lint: disable-next-line(arbitrary-send-eth)
             payable(to).sendValue(amount);
         } else {
             amount = IERC20(token).balanceOf(address(this));

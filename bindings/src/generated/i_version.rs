@@ -187,23 +187,36 @@ function VERSION() external view returns (string memory version);
                     })
             }
             #[inline]
-            fn abi_decode_returns_validate(
+            fn abi_decode_returns_with_config(
                 data: &[u8],
+                config: alloy_sol_types::abi::AbiDecoderConfig,
             ) -> alloy_sol_types::Result<Self::Return> {
                 <Self::ReturnTuple<
                     '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence_validate(data)
+                > as alloy_sol_types::SolType>::abi_decode_sequence_with_config(
+                        data,
+                        config,
+                    )
                     .map(|r| {
                         let r: VERSIONReturn = r.into();
                         r.version
                     })
+            }
+            #[inline]
+            fn abi_decode_returns_validate(
+                data: &[u8],
+            ) -> alloy_sol_types::Result<Self::Return> {
+                Self::abi_decode_returns_with_config(
+                    data,
+                    alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+                )
             }
         }
     };
     ///Container for all the [`IVersion`](self) function calls.
     #[derive(Clone)]
     #[derive(serde::Serialize, serde::Deserialize)]
-    #[derive()]
+    #[derive(Debug, PartialEq, Eq, Hash)]
     pub enum IVersionCalls {
         #[allow(missing_docs)]
         VERSION(VERSIONCall),
@@ -270,40 +283,31 @@ function VERSION() external view returns (string memory version);
             selector: [u8; 4],
             data: &[u8],
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_SHIMS: &[fn(
-                &[u8],
-            ) -> alloy_sol_types::Result<IVersionCalls>] = &[
-                {
-                    fn VERSION(data: &[u8]) -> alloy_sol_types::Result<IVersionCalls> {
-                        <VERSIONCall as alloy_sol_types::SolCall>::abi_decode_raw(data)
-                            .map(IVersionCalls::VERSION)
-                    }
-                    VERSION
-                },
-            ];
-            let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
-            };
-            DECODE_SHIMS[idx](data)
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::default(),
+            )
         }
         #[inline]
         #[allow(non_snake_case)]
-        fn abi_decode_raw_validate(
+        fn abi_decode_raw_with_config(
             selector: [u8; 4],
             data: &[u8],
+            config: alloy_sol_types::abi::AbiDecoderConfig,
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_VALIDATE_SHIMS: &[fn(
+            static DECODE_SHIMS: &[fn(
                 &[u8],
+                alloy_sol_types::abi::AbiDecoderConfig,
             ) -> alloy_sol_types::Result<IVersionCalls>] = &[
                 {
-                    fn VERSION(data: &[u8]) -> alloy_sol_types::Result<IVersionCalls> {
-                        <VERSIONCall as alloy_sol_types::SolCall>::abi_decode_raw_validate(
+                    fn VERSION(
+                        data: &[u8],
+                        config: alloy_sol_types::abi::AbiDecoderConfig,
+                    ) -> alloy_sol_types::Result<IVersionCalls> {
+                        <VERSIONCall as alloy_sol_types::SolCall>::abi_decode_raw_with_config(
                                 data,
+                                config,
                             )
                             .map(IVersionCalls::VERSION)
                     }
@@ -318,7 +322,19 @@ function VERSION() external view returns (string memory version);
                     ),
                 );
             };
-            DECODE_VALIDATE_SHIMS[idx](data)
+            DECODE_SHIMS[idx](data, config)
+        }
+        #[inline]
+        #[allow(non_snake_case)]
+        fn abi_decode_raw_validate(
+            selector: [u8; 4],
+            data: &[u8],
+        ) -> alloy_sol_types::Result<Self> {
+            Self::abi_decode_raw_with_config(
+                selector,
+                data,
+                alloy_sol_types::abi::AbiDecoderConfig::new().validate(true),
+            )
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

@@ -84,7 +84,7 @@ abstract contract ForwarderBaseUpgradeable is
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
     /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
     /// @param initialOwner The initial owner of the forwarder contract that can upgrade the contract.
-    // solhint-disable-next-line func-name-mixedcase
+    // forge-lint: disable-next-line(mixed-case-function)
     function __ForwarderBaseUpgradeable_init(address protocolAdapter, bytes32 logicRef, address initialOwner)
         internal
         onlyInitializing
@@ -96,7 +96,7 @@ abstract contract ForwarderBaseUpgradeable is
     /// @notice Initializes the upgradeable forwarder base contract.
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
     /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
-    // solhint-disable-next-line func-name-mixedcase
+    // forge-lint: disable-next-line(mixed-case-function)
     function __ForwarderBaseUpgradeable_init_unchained(address protocolAdapter, bytes32 logicRef)
         internal
         onlyInitializing
@@ -130,12 +130,9 @@ abstract contract ForwarderBaseUpgradeable is
     /// @notice Returns the storage from the forwarder base storage slot.
     /// @return store The data associated with the forwarder base storage.
     function _getForwarderBaseStorage() internal pure returns (ForwarderBaseStorage storage store) {
-        /* solhint-disable no-inline-assembly */
-        // slither-disable-next-line assembly
+        // forge-lint: disable-next-item(inline-assembly)
         assembly {
             store.slot := _FORWARDER_BASE_STORAGE_SLOT
         }
-
-        /* solhint-enable no-inline-assembly */
     }
 }
