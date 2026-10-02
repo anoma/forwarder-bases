@@ -85,7 +85,7 @@ bunx solhint --max-warnings 0 --config .solhint.other.json 'test/**/*.sol' && \
 slither .
 ```
 
-`forge lint` runs its full rule set on `src` only. solhint checks `src` for the rules that `forge lint` lacks, and checks `test` with the relaxed `.solhint.other.json`.
+`forge lint` runs its full rule set on `src` only. solhint checks `src` for the rules that `forge lint` lacks, and checks `test` with the relaxed `.solhint.other.json`. slither skips `assembly`, `calls-loop` and `locked-ether`, because `forge lint` reports every site that slither reports for them.
 
 #### Rust Bindings
 

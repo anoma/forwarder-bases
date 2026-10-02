@@ -11,8 +11,6 @@ import {INativeTokenReceiver} from "./interfaces/INativeTokenReceiver.sol";
 /// @dev The inheriting contract has to implement a method allowing to withdraw the native tokens.
 /// @custom:security-contact security@anoma.foundation
 contract NativeTokenReceiver is INativeTokenReceiver {
-    // slither-disable-start locked-ether
-
     /// @notice Emits the `NativeTokenReceived` event to track native token deposits.
     /// @dev This call is bound by the gas limitations for `send`/`transfer` calls introduced by
     /// [ERC-2929](https://eips.ethereum.org/EIPS/eip-2929). Gas cost increases in future hard forks might limit this
@@ -20,6 +18,4 @@ contract NativeTokenReceiver is INativeTokenReceiver {
     receive() external payable override {
         emit NativeTokenReceived({sender: msg.sender, amount: msg.value});
     }
-
-    // slither-disable-end locked-ether
 }

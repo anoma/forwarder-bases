@@ -131,7 +131,6 @@ abstract contract ForwarderBaseUpgradeable is
     /// @return store The data associated with the forwarder base storage.
     function _getForwarderBaseStorage() internal pure returns (ForwarderBaseStorage storage store) {
         // forge-lint: disable-next-item(inline-assembly)
-        // slither-disable-next-line assembly
         assembly {
             store.slot := _FORWARDER_BASE_STORAGE_SLOT
         }
