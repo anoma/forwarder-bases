@@ -71,3 +71,6 @@ jobs:
 
       - name: Run Forge tests
         run: just contracts-test
+
+      - name: Check that the gas report is up-to-date
+        run: just contracts-gas-report-check
