@@ -3,9 +3,10 @@
 solc = "0.8.37"
 auto_detect_solc = false
 evm_version = "osaka"
+# The abstract forwarder bases are measured through the example forwarders that the tests deploy.
 gas_reports = [
-    "ForwarderBase",
-    "ForwarderBaseUpgradeable",
+    "ForwarderExample",
+    "ForwarderUpgradeableExample",
     "NativeTokenReceiver",
     "SweepableNativeTokenReceiver",
     "TransientFallbackHandler",

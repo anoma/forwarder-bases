@@ -78,6 +78,16 @@ contracts-gen-bindings:
         --module \
         --overwrite
 
+# Regenerate the gas report of the contracts that `gas_reports` in foundry.toml lists
+contracts-gen-gas-report:
+    # Fuzz and invariant tests use other inputs on each run, so the report counts only the `test_` unit tests.
+    # `sed` keeps the gas tables of the output.
+    cd contracts && forge test --force --gas-report --md --match-test '^test_' | sed -n '/^|/,/^$/p' > ../docs/gas-report.md
+
+# Check the gas report is up-to-date
+contracts-gas-report-check: contracts-gen-gas-report
+    git diff --exit-code docs/gas-report.md
+
 # Publish contracts to soldeer. VERSION must be semver (e.g. 1.2.0).
 # Flags such as --dry-run go AFTER the version: `just contracts-publish 1.2.0 --dry-run`.
 contracts-publish version *args:
@@ -169,3 +179,5 @@ all-check:
     @just all-lint
     @echo "==> Checking bindings are up-to-date..."
     @just bindings-check
+    @echo "==> Checking the gas report is up-to-date..."
+    @just contracts-gas-report-check
