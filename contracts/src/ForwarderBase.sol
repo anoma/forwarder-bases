@@ -15,7 +15,7 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
     /// @notice The protocol adapter contract that can forward calls.
     address internal immutable _PROTOCOL_ADAPTER;
 
-    /// @notice The reference to the logic function of the resource kind triggering the forward calls.
+    /// @notice The reference to the logic function of the resource kind carrying the forward calls.
     bytes32 internal immutable _LOGIC_REF;
 
     /// @notice Ensures that the protocol adapter is the function caller.
@@ -28,9 +28,8 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
         _;
     }
 
-    /// @notice Ensures that the function call is triggered by a resource with the logic reference the forwarder is
-    /// associated with.
-    /// @param logicRef The logic reference of the resource triggering the forward call.
+    /// @notice Ensures that a resource with the logic reference of the forwarder carries the function call.
+    /// @param logicRef The logic reference of the resource carrying the forward call.
     // NOTE: Inheriting forwarders can apply the modifier too, and with one use, wrapping saves no code size.
     // forge-lint: disable-next-item(modifier-used-only-once,unwrapped-modifier-logic)
     modifier onlyLogicRef(bytes32 logicRef) {
@@ -40,7 +39,7 @@ abstract contract ForwarderBase is IForwarder, IProtocolAdapterSpecific, ILogicR
 
     /// @notice Initializes the forwarder base contract.
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
-    /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
+    /// @param logicRef The reference to the logic function of the resource kind carrying the forward call.
     constructor(address protocolAdapter, bytes32 logicRef) {
         require(protocolAdapter != address(0), ZeroProtocolAdapterNotAllowed());
         require(logicRef != bytes32(0), ZeroLogicRefNotAllowed());
