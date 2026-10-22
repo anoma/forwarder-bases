@@ -70,13 +70,24 @@ contracts-test *args:
 # Regenerate Rust bindings from contracts
 contracts-gen-bindings:
     # `forge bind` builds without bytecode, which drops the bytecode constants, so
-    # build first and let it read those artifacts.
+    # build first and let it read those artifacts. `--skip test` skips only the
+    # `.t.sol` files, so the examples in `test/examples` are built too.
     cd contracts && forge clean && forge build --skip test && forge bind \
         --skip-build \
-        --select '^(IFallbackHandler|IForwarder|IImplementation|ILogicRefSpecific|INativeTokenReceiver|IProtocolAdapterSpecific|ISweepable|IVersion)$' \
+        --select '^(IFallbackHandler|IForwarder|IImplementation|ILogicRefSpecific|INativeTokenReceiver|IProtocolAdapterSpecific|ISweepable|IVersion|ERC1155Example|ERC20Example|ERC721Example|ForwarderExample|ForwarderTargetExample|ForwarderUpgradeableExample|ForwarderUpgradeableExampleV2|ReentrantTargetExample)$' \
         --bindings-path ../bindings/src/generated/ \
         --module \
         --overwrite
+
+# Regenerate the gas report of the contracts that `gas_reports` in foundry.toml lists
+contracts-gen-gas-report:
+    # Fuzz and invariant tests use other inputs on each run, so the report counts only the `test_` unit tests.
+    # `sed` keeps the gas tables of the output.
+    cd contracts && forge test --force --gas-report --md --match-test '^test_' | sed -n '/^|/,/^$/p' > ../docs/gas-report.md
+
+# Check the gas report is up-to-date
+contracts-gas-report-check: contracts-gen-gas-report
+    git diff --exit-code docs/gas-report.md
 
 # Publish contracts to soldeer. VERSION must be semver (e.g. 1.2.0).
 # Flags such as --dry-run go AFTER the version: `just contracts-publish 1.2.0 --dry-run`.
@@ -169,3 +180,5 @@ all-check:
     @just all-lint
     @echo "==> Checking bindings are up-to-date..."
     @just bindings-check
+    @echo "==> Checking the gas report is up-to-date..."
+    @just contracts-gas-report-check

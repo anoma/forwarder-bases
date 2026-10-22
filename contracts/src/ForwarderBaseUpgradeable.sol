@@ -32,7 +32,7 @@ abstract contract ForwarderBaseUpgradeable is
     struct ForwarderBaseStorage {
         // The protocol adapter contract that can forward calls.
         address _protocolAdapter;
-        // The reference to the logic function of the resource triggering the forward calls.
+        // The reference to the logic function of the resource carrying the forward calls.
         bytes32 _logicRef;
     }
 
@@ -82,7 +82,7 @@ abstract contract ForwarderBaseUpgradeable is
 
     /// @notice Initializes the upgradeable forwarder base by calling the unchained parent initializers.
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
-    /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
+    /// @param logicRef The reference to the logic function of the resource kind carrying the forward call.
     /// @param initialOwner The initial owner of the forwarder contract that can upgrade the contract.
     // forge-lint: disable-next-line(mixed-case-function)
     function __ForwarderBaseUpgradeable_init(address protocolAdapter, bytes32 logicRef, address initialOwner)
@@ -95,7 +95,7 @@ abstract contract ForwarderBaseUpgradeable is
 
     /// @notice Initializes the upgradeable forwarder base contract.
     /// @param protocolAdapter The protocol adapter contract that can forward calls.
-    /// @param logicRef The reference to the logic function of the resource kind triggering the forward call.
+    /// @param logicRef The reference to the logic function of the resource kind carrying the forward call.
     // forge-lint: disable-next-line(mixed-case-function)
     function __ForwarderBaseUpgradeable_init_unchained(address protocolAdapter, bytes32 logicRef)
         internal
