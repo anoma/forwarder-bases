@@ -70,10 +70,11 @@ contracts-test *args:
 # Regenerate Rust bindings from contracts
 contracts-gen-bindings:
     # `forge bind` builds without bytecode, which drops the bytecode constants, so
-    # build first and let it read those artifacts.
+    # build first and let it read those artifacts. `--skip test` skips only the
+    # `.t.sol` files, so the examples in `test/examples` are built too.
     cd contracts && forge clean && forge build --skip test && forge bind \
         --skip-build \
-        --select '^(IFallbackHandler|IForwarder|IImplementation|ILogicRefSpecific|INativeTokenReceiver|IProtocolAdapterSpecific|ISweepable|IVersion)$' \
+        --select '^(IFallbackHandler|IForwarder|IImplementation|ILogicRefSpecific|INativeTokenReceiver|IProtocolAdapterSpecific|ISweepable|IVersion|ERC1155Example|ERC20Example|ERC721Example|ForwarderExample|ForwarderTargetExample|ForwarderUpgradeableExample|ForwarderUpgradeableExampleV2|ReentrantTargetExample)$' \
         --bindings-path ../bindings/src/generated/ \
         --module \
         --overwrite
