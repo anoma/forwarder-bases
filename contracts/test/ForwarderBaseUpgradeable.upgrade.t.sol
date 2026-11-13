@@ -4,8 +4,8 @@ pragma solidity ^0.8.30;
 import {IERC1967} from "@openzeppelin-contracts-5.7.0/interfaces/IERC1967.sol";
 import {Initializable} from "@openzeppelin-contracts-5.7.0/proxy/utils/Initializable.sol";
 import {OwnableUpgradeable} from "@openzeppelin-contracts-upgradeable-5.7.0/access/OwnableUpgradeable.sol";
-import {Options} from "openzeppelin-foundry-upgrades-0.4.2/src/Options.sol";
-import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.2/src/Upgrades.sol";
+import {Options} from "openzeppelin-foundry-upgrades-0.4.4/src/Options.sol";
+import {Upgrades} from "openzeppelin-foundry-upgrades-0.4.4/src/Upgrades.sol";
 
 import {ForwarderTargetExample} from "./examples/ForwarderTargetExample.sol";
 import {ForwarderUpgradeableExample, ForwarderUpgradeableExampleV2} from "./examples/ForwarderUpgradeableExample.sol";
