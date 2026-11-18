@@ -9,11 +9,11 @@ Releases of the packages contained in this monorepo follow the [SemVer conventio
 We distinguish between three release cases:
 
 - Releasing a **new** forwarder bases version
-  - `contracts/X.Y.Z` version
-  - `bindings/A.0.0` version
+  - `contracts/vX.Y.Z` version
+  - `bindings/vA.0.0` version
 
 - Maintaining the bindings resulting in a new
-  - `bindings/A.B.C` version
+  - `bindings/vA.B.C` version
 
 ## Releasing a new Forwarder Bases Version
 
@@ -44,8 +44,8 @@ We distinguish between three release cases:
 - [ ] Run the tests with `just bindings-test`.
 
 - [ ] After merging, create new tags for:
-  - [ ] `contracts/X.Y.Z` where `X.Y.Z` is the new semantic version number
-  - [ ] `bindings/A.0.0` tag, where `A` is the last `MAJOR` version incremented by 1.
+  - [ ] `contracts/vX.Y.Z` where `X.Y.Z` is the new semantic version number
+  - [ ] `bindings/vA.0.0` tag, where `A` is the last `MAJOR` version incremented by 1.
 
 - [ ] Create new [GH releases](https://github.com/anoma/forwarder-bases/releases) for both packages.
 
@@ -91,7 +91,7 @@ We distinguish between three release cases:
 
 - [ ] Run the tests with `just bindings-test`.
 
-- [ ] After merging, create a new `bindings/A.B.C` tag, where `A` and `B` are the last `MAJOR` and `MINOR` version numbers, respectively, and `C` is the last `PATCH` version number incremented by 1.
+- [ ] After merging, create a new `bindings/vA.B.C` tag, where `A` and `B` are the last `MAJOR` and `MINOR` version numbers, respectively, and `C` is the last `PATCH` version number incremented by 1.
 
 - [ ] Create a new [GH release](https://github.com/anoma/forwarder-bases/releases).
 
