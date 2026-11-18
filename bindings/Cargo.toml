@@ -1,11 +1,12 @@
 [package]
 name = "anoma-forwarder-bases-bindings"
-version = "3.1.0"
+version = "3.1.1"
 description = "The bindings to forwarder base contracts and their interfaces, and to the example contracts that tests deploy."
 keywords.workspace = true
 authors.workspace = true
 license.workspace = true
 homepage.workspace = true
+repository.workspace = true
 edition.workspace = true
 
 [dependencies]

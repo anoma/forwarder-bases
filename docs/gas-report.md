@@ -1,24 +1,24 @@
 | src/NativeTokenReceiver.sol:NativeTokenReceiver Contract |                 |      |        |       |         |
 |----------------------------------------------------------|-----------------|------|--------|-------|---------|
 | Deployment Cost                                          | Deployment Size |      |        |       |         |
-|                                                        0 |              81 |      |        |       |         |
+|                                                    65759 |              81 |      |        |       |         |
 |                                                          |                 |      |        |       |         |
 | Function Name                                            | Min             | Avg  | Median | Max   | # Calls |
-| receive                                                  |               0 | 7482 |      0 | 22446 |       3 |
+| receive                                                  |            2300 | 9015 |   2300 | 22446 |       3 |
 
 | src/SweepableNativeTokenReceiver.sol:SweepableNativeTokenReceiver Contract |                 |       |        |       |         |
 |----------------------------------------------------------------------------|-----------------|-------|--------|-------|---------|
 | Deployment Cost                                                            | Deployment Size |       |        |       |         |
-|                                                                          0 |             922 |       |        |       |         |
+|                                                                     244801 |             922 |       |        |       |         |
 |                                                                            |                 |       |        |       |         |
 | Function Name                                                              | Min             | Avg   | Median | Max   | # Calls |
-| receive                                                                    |               0 |  7492 |      0 | 22476 |       3 |
+| receive                                                                    |            2300 |  9025 |   2300 | 22476 |       3 |
 | sweep                                                                      |           21800 | 39511 |  34301 | 58078 |       5 |
 
 | src/TransientFallbackHandler.sol:TransientFallbackHandler Contract |                 |      |        |      |         |
 |--------------------------------------------------------------------|-----------------|------|--------|------|---------|
 | Deployment Cost                                                    | Deployment Size |      |        |      |         |
-|                                                                  0 |            1089 |      |        |      |         |
+|                                                             173419 |            1089 |      |        |      |         |
 |                                                                    |                 |      |        |      |         |
 | Function Name                                                      | Min             | Avg  | Median | Max  | # Calls |
 | fallback                                                           |            3316 | 3316 |   3316 | 3316 |     256 |

@@ -37,7 +37,7 @@ remappings = [
     "@openzeppelin/contracts/=dependencies/@openzeppelin-contracts-5.7.0/",
     "forge-std-1.17.0/=dependencies/forge-std-1.17.0/",
     "forge-std/=dependencies/forge-std-1.17.0/src/",
-    "openzeppelin-foundry-upgrades-0.4.2/=dependencies/openzeppelin-foundry-upgrades-0.4.2/",
+    "openzeppelin-foundry-upgrades-0.4.4/=dependencies/openzeppelin-foundry-upgrades-0.4.4/",
     "solady-0.1.26/=dependencies/solady-0.1.26/",
 ]
 ignored_warnings_from = [
@@ -52,7 +52,7 @@ severity = ["high", "medium", "low", "info", "gas", "code-size"] # The default l
 "@openzeppelin-contracts-upgradeable" = "5.7.0"
 "forge-std" = "1.17.0"
 "solady" = "0.1.26"
-"openzeppelin-foundry-upgrades" = "0.4.2"
+"openzeppelin-foundry-upgrades" = "0.4.4"
 
 [soldeer]
 recursive_deps = true
