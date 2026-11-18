@@ -2,11 +2,10 @@
 
 Releases of the packages contained in this monorepo follow the [SemVer convention](https://semver.org/spec/v2.0.0.html).
 
-> ![NOTE]
-> The `contracts` and `bindings` are independently versioned with `X.Y.Z` and `A.B.C`, respectively.
-> Both versions can include release candidates (suffixed with `-rc.?`).
+> [!NOTE]
+> The `contracts` and `bindings` are independently versioned with `X.Y.Z` and `A.B.C`, respectively. Both versions can include release candidates (suffixed with `-rc.?`).
 
-We distinguish between three release cases:
+We distinguish between two release cases:
 
 - Releasing a **new** forwarder bases version
   - `contracts/vX.Y.Z` version
@@ -61,7 +60,7 @@ We distinguish between three release cases:
   just contracts-publish <X.Y.Z> --dry-run
   ```
 
-  where `<X.Y.Z>` is the version number and check the resulting `contracts.zip`file. If everything is correct, remove the`--dry-run` flag and publish the package.
+  where `<X.Y.Z>` is the version number and check the resulting `contracts.zip` file. If everything is correct, remove the `--dry-run` flag and publish the package.
 
 ### 5. Publish a new `bindings` package
 
